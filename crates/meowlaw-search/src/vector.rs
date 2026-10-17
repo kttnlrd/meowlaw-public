@@ -137,13 +137,28 @@ pub struct HttpEmbedder {
     agent: ureq::Agent,
 }
 
+/// Largest response body accepted from an embeddings or chat endpoint.
+pub const HTTP_RESPONSE_LIMIT: u64 = 64 * 1024 * 1024;
+
+/// HTTP client for embeddings and chat endpoints. A hung endpoint must fail
+/// the request, not block `embed`, `summarise` or an ingest-page upload (which
+/// holds the write lock) forever. `global` bounds one whole request.
+pub fn http_agent(global: Option<std::time::Duration>) -> ureq::Agent {
+    ureq::Agent::new_with_config(
+        ureq::Agent::config_builder()
+            .timeout_connect(Some(std::time::Duration::from_secs(30)))
+            .timeout_global(global)
+            .build(),
+    )
+}
+
 impl HttpEmbedder {
     pub fn new(url: impl Into<String>, model: impl Into<String>, api_key: Option<String>) -> Self {
         Self {
             url: url.into(),
             model: model.into(),
             api_key,
-            agent: ureq::Agent::new_with_defaults(),
+            agent: http_agent(Some(std::time::Duration::from_secs(300))),
         }
     }
 }
@@ -165,7 +180,13 @@ impl Embedder for HttpEmbedder {
         let mut resp = req
             .send(serde_json::to_string(&body)?.as_bytes())
             .with_context(|| format!("POST {}", self.url))?;
-        let v: serde_json::Value = serde_json::from_reader(resp.body_mut().as_reader())?;
+        let reader = resp
+            .body_mut()
+            .with_config()
+            .limit(HTTP_RESPONSE_LIMIT)
+            .reader();
+        let v: serde_json::Value = serde_json::from_reader(reader)
+            .with_context(|| format!("reading the response from {}", self.url))?;
         let Some(data) = v.get("data").and_then(|d| d.as_array()) else {
             bail!("embedding response has no `data` array: {v}");
         };
@@ -574,14 +595,20 @@ pub mod local {
             let mut res = Vec::with_capacity(texts.len());
             for r in 0..texts.len() {
                 let mut v: Vec<f32> = match self.opts.pooling {
-                    Pooling::Cls => h.slice(tract_ndarray::s![r, 0, ..]).iter().copied().collect(),
+                    Pooling::Cls => h
+                        .slice(tract_ndarray::s![r, 0, ..])
+                        .iter()
+                        .copied()
+                        .collect(),
                     Pooling::Mean => {
                         let dim = h.shape()[2];
                         let mut acc = vec![0f32; dim];
                         let mut n = 0f32;
                         for c in 0..l {
                             if mask[r * l + c] == 1 {
-                                for (a, x) in acc.iter_mut().zip(h.slice(tract_ndarray::s![r, c, ..])) {
+                                for (a, x) in
+                                    acc.iter_mut().zip(h.slice(tract_ndarray::s![r, c, ..]))
+                                {
                                     *a += *x;
                                 }
                                 n += 1.0;
@@ -694,7 +721,8 @@ pub mod models {
     pub fn pull(dir: &Path, p: &Preset, mut progress: impl FnMut(&str, u64)) -> Result<PathBuf> {
         let target = dir.join(p.name);
         std::fs::create_dir_all(&target)?;
-        let agent = ureq::Agent::new_with_defaults();
+        // Downloads are large and interactive: bound the connect, not the transfer.
+        let agent = super::http_agent(None);
         for (remote, local) in [(p.onnx, "model.onnx"), ("tokenizer.json", "tokenizer.json")] {
             let dest = target.join(local);
             if dest.exists() && std::fs::metadata(&dest)?.len() > 0 {
@@ -702,7 +730,10 @@ pub mod models {
                 continue;
             }
             let url = format!("https://huggingface.co/{}/resolve/main/{remote}", p.repo);
-            let mut resp = agent.get(&url).call().with_context(|| format!("GET {url}"))?;
+            let mut resp = agent
+                .get(&url)
+                .call()
+                .with_context(|| format!("GET {url}"))?;
             if resp.status() != 200 {
                 bail!("GET {url}: HTTP {}", resp.status());
             }

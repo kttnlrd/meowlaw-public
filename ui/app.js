@@ -34,8 +34,8 @@ async function api(path, params = {}, retry = true) {
   const r = await fetch(path + (qs.toString() ? "?" + qs : ""), token ? { headers: { Authorization: "Bearer " + token } } : {});
   // Protected API: ask once for the token and retry.
   if (r.status === 401 && retry) {
-    const t = prompt(t("token_prompt"));
-    if (t) { try { localStorage.setItem("meowlaw-token", t.trim()); } catch (_) {} return api(path, params, false); }
+    const given = prompt(t("token_prompt"));
+    if (given) { try { localStorage.setItem("meowlaw-token", given.trim()); } catch (_) {} return api(path, params, false); }
   }
   const body = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(body.error || r.statusText);
@@ -161,10 +161,10 @@ async function selectSource(id) {
   treeState.corpus = id;
   $("#tree").innerHTML = `<p class="empty">${esc(t("loading"))}</p>`;
   $("#tree-filter").value = "";
-  let t = treeCache.get(id);
-  if (!t) {
-    try { t = await api("/api/tree", { corpus: id }); } catch (e) { $("#tree").innerHTML = `<p class="empty">${esc(e.message)}</p>`; return; }
-    treeCache.set(id, t);
+  let tree = treeCache.get(id);
+  if (!tree) {
+    try { tree = await api("/api/tree", { corpus: id }); } catch (e) { $("#tree").innerHTML = `<p class="empty">${esc(e.message)}</p>`; return; }
+    treeCache.set(id, tree);
   }
   if (treeState.corpus !== id) return;
   treeState.byId = new Map(); treeState.parent = new Map();
@@ -172,12 +172,12 @@ async function selectSource(id) {
     treeState.byId.set(n.id, n); treeState.parent.set(n.id, parent);
     if (n.children) index(n.children, n.id);
   });
-  index(t.children || [], null);
+  index(tree.children || [], null);
   const root = $("#tree");
-  root.innerHTML = `<a class="tree-title" href="#/corpus/${encodeURIComponent(id)}">${esc(t.title)}</a>`;
+  root.innerHTML = `<a class="tree-title" href="#/corpus/${encodeURIComponent(id)}">${esc(tree.title)}</a>`;
   const list = document.createElement("div");
   list.className = "tlist";
-  (t.children || []).forEach((n) => list.appendChild(treeRow(n)));
+  (tree.children || []).forEach((n) => list.appendChild(treeRow(n)));
   root.appendChild(list);
   if (treeState.active) revealInTree(treeState.active);
 }

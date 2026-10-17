@@ -315,7 +315,7 @@ impl Config {
                     .as_ref()
                     .map(|d| self.resolve(d))
                     .context("[embeddings] provider = \"local\" needs `model_dir`")?;
-Ok(Some(Box::new(
+                Ok(Some(Box::new(
                     meowlaw_search::vector::local::LocalEmbedder::load(
                         &dir,
                         &em.model,
@@ -457,7 +457,10 @@ pub fn glob(pat: &str, s: &str) -> bool {
         return pat == s;
     }
     let (first, last) = (parts[0], parts[parts.len() - 1]);
-    if !s.starts_with(first) || !s[first.len()..].ends_with(last) || s.len() < first.len() + last.len() {
+    if !s.starts_with(first)
+        || !s[first.len()..].ends_with(last)
+        || s.len() < first.len() + last.len()
+    {
         return false;
     }
     let mut rest = &s[first.len()..s.len() - last.len()];

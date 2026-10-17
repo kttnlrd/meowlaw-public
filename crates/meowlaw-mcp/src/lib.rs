@@ -112,7 +112,10 @@ impl McpServer {
                 "error": { "code": -32600, "message": "Invalid request: empty batch" }
             })),
             Value::Array(items) => {
-                let out: Vec<Value> = items.iter().filter_map(|m| self.handle_scoped(m, scope)).collect();
+                let out: Vec<Value> = items
+                    .iter()
+                    .filter_map(|m| self.handle_scoped(m, scope))
+                    .collect();
                 (!out.is_empty()).then_some(Value::Array(out))
             }
             m => self.handle_scoped(m, scope),

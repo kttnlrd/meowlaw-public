@@ -116,15 +116,18 @@ pub fn profile_test(
                     number,
                     title,
                     ..
-                } => headings.entry(profile.canonical_label(&label)).or_default().add(
-                    format!(
-                        "{label} {} {}",
-                        number.unwrap_or_default(),
-                        title.unwrap_or_default()
-                    )
-                    .trim()
-                    .to_string(),
-                ),
+                } => headings
+                    .entry(profile.canonical_label(&label))
+                    .or_default()
+                    .add(
+                        format!(
+                            "{label} {} {}",
+                            number.unwrap_or_default(),
+                            title.unwrap_or_default()
+                        )
+                        .trim()
+                        .to_string(),
+                    ),
                 Block::Para(_) => {}
             }
         }
@@ -158,7 +161,8 @@ pub fn profile_test(
                 Some(t) => {
                     b.resolved += 1;
                     if b.examples_resolved.len() < EXAMPLES {
-                        b.examples_resolved.push(format!("{} → {t}", one_line(&r.raw)));
+                        b.examples_resolved
+                            .push(format!("{} → {t}", one_line(&r.raw)));
                     }
                 }
                 None => {
@@ -204,7 +208,9 @@ pub fn profile_test(
         }
     }
     if definitions.is_empty() && doc.corpus.kind.is_structured() {
-        notes.push("No definitions found. Check `[definitions]` patterns and `section_titles`.".into());
+        notes.push(
+            "No definitions found. Check `[definitions]` patterns and `section_titles`.".into(),
+        );
     }
     let definitions_total = definitions.len();
     Ok(ProfileReport {
@@ -248,7 +254,10 @@ fn looks_like_heading(t: &str) -> bool {
     let (Some(a), Some(b)) = (words.next(), words.next()) else {
         return false;
     };
-    let num = |w: &str| w.chars().next().is_some_and(|c| c.is_ascii_digit()) || w.chars().all(|c| "IVXLC".contains(c));
+    let num = |w: &str| {
+        w.chars().next().is_some_and(|c| c.is_ascii_digit())
+            || w.chars().all(|c| "IVXLC".contains(c))
+    };
     (a.chars().next().is_some_and(char::is_uppercase) && num(b))
         || (num(a) && b.chars().next().is_some_and(char::is_uppercase))
 }
@@ -261,17 +270,39 @@ impl ProfileReport {
             o.push_str(&s);
             o.push('\n');
         };
-        line(&mut o, format!("{}  →  corpus `{}` ({}), profile `{}`", self.file, self.corpus, self.kind, self.profile));
-        line(&mut o, format!("nodes: {} {:?}", self.nodes, self.node_kinds));
+        line(
+            &mut o,
+            format!(
+                "{}  →  corpus `{}` ({}), profile `{}`",
+                self.file, self.corpus, self.kind, self.profile
+            ),
+        );
+        line(
+            &mut o,
+            format!("nodes: {} {:?}", self.nodes, self.node_kinds),
+        );
         line(&mut o, "\nHeadings recognised".into());
         if self.headings.is_empty() {
             line(&mut o, "  (none)".into());
         }
         for (label, b) in &self.headings {
-            line(&mut o, format!("  {label:<14} {:>5}   e.g. {}", b.count, b.examples.join(" | ")));
+            line(
+                &mut o,
+                format!(
+                    "  {label:<14} {:>5}   e.g. {}",
+                    b.count,
+                    b.examples.join(" | ")
+                ),
+            );
         }
         if self.unmatched_headings.count > 0 {
-            line(&mut o, format!("\nHeading-like lines with no matching level: {}", self.unmatched_headings.count));
+            line(
+                &mut o,
+                format!(
+                    "\nHeading-like lines with no matching level: {}",
+                    self.unmatched_headings.count
+                ),
+            );
             for e in &self.unmatched_headings.examples {
                 line(&mut o, format!("  {e}"));
             }
@@ -281,7 +312,13 @@ impl ProfileReport {
             line(&mut o, "  (none)".into());
         }
         for (name, b) in &self.citations {
-            line(&mut o, format!("  {name:<22} {:>5} found, {:>5} resolved", b.count, b.resolved));
+            line(
+                &mut o,
+                format!(
+                    "  {name:<22} {:>5} found, {:>5} resolved",
+                    b.count, b.resolved
+                ),
+            );
             for e in &b.examples_resolved {
                 line(&mut o, format!("      ✓ {e}"));
             }
@@ -291,7 +328,13 @@ impl ProfileReport {
         }
         line(&mut o, format!("\nDefinitions: {}", self.definitions_total));
         for d in &self.definitions {
-            line(&mut o, format!("  “{}” [{}] in {} → scope {}", d.term, d.pattern, d.source, d.scope));
+            line(
+                &mut o,
+                format!(
+                    "  “{}” [{}] in {} → scope {}",
+                    d.term, d.pattern, d.source, d.scope
+                ),
+            );
         }
         if self.paragraphs > 0 {
             line(&mut o, format!("\nParagraph nodes: {}", self.paragraphs));

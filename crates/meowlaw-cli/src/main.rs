@@ -111,10 +111,10 @@ enum Cmd {
         /// Skip embeddings and similarity edges afterwards.
         #[arg(long)]
         no_embed: bool,
-        #[arg(long)]
         /// Do not lint changed sources.
         #[arg(long)]
         no_lint: bool,
+        #[arg(long)]
         json: bool,
     },
     /// Remove a corpus.
@@ -387,7 +387,8 @@ fn main() -> Result<()> {
                 force,
                 skip_lint: no_lint,
             };
-            let report = meowlaw_search::sync::sync(&e, &registry(&cfg)?, &file.sources, &base, opts)?;
+            let report =
+                meowlaw_search::sync::sync(&e, &registry(&cfg)?, &file.sources, &base, opts)?;
             let md = report.to_markdown();
             if !dry_run {
                 let dir = cfg.resolve(&cfg.storage.data_dir).join("reports");
@@ -454,7 +455,10 @@ fn main() -> Result<()> {
                     None => None,
                 },
                 kind: kind
-                    .map(|k| meowlaw_core::CorpusKind::parse(&k).with_context(|| format!("unknown kind `{k}`")))
+                    .map(|k| {
+                        meowlaw_core::CorpusKind::parse(&k)
+                            .with_context(|| format!("unknown kind `{k}`"))
+                    })
                     .transpose()?,
             };
             if fix {
@@ -468,10 +472,13 @@ fn main() -> Result<()> {
                     vec![path.clone()]
                 };
                 for f in files.iter().filter(|f| {
-                    matches!(f.extension().and_then(|e| e.to_str()), Some("txt" | "md" | "markdown"))
-                        && !f.to_string_lossy().contains(".meta.")
+                    matches!(
+                        f.extension().and_then(|e| e.to_str()),
+                        Some("txt" | "md" | "markdown")
+                    ) && !f.to_string_lossy().contains(".meta.")
                 }) {
-                    let src = std::fs::read_to_string(f).with_context(|| format!("reading {}", f.display()))?;
+                    let src = std::fs::read_to_string(f)
+                        .with_context(|| format!("reading {}", f.display()))?;
                     let (fixed, applied) = meowlaw_lint::fix_text(&src);
                     if fixed != src {
                         std::fs::write(PathBuf::from(format!("{}.bak", f.display())), &src)?;
@@ -502,7 +509,13 @@ fn main() -> Result<()> {
                             (None, Some(l)) => format!("{l}"),
                             _ => String::new(),
                         };
-                        println!("  {:7} {:30} {:>7}  {}", f.severity.as_str(), f.rule, at, f.message);
+                        println!(
+                            "  {:7} {:30} {:>7}  {}",
+                            f.severity.as_str(),
+                            f.rule,
+                            at,
+                            f.message
+                        );
                         if let Some(e) = &f.excerpt {
                             println!("  {:47}> {e}", "");
                         }
@@ -706,8 +719,12 @@ fn main() -> Result<()> {
                     } else {
                         Some(Store::open(cfg.db_path())?)
                     };
-                    let rep =
-                        meowlaw_search::diagnose::profile_test(&file, &overrides, &r, store.as_ref())?;
+                    let rep = meowlaw_search::diagnose::profile_test(
+                        &file,
+                        &overrides,
+                        &r,
+                        store.as_ref(),
+                    )?;
                     if as_json {
                         print(&serde_json::to_value(&rep)?);
                     } else {
@@ -733,7 +750,10 @@ fn main() -> Result<()> {
             match cmd {
                 ModelCmd::List => {
                     for p in models::PRESETS {
-                        println!("{:<40} {:<11} {:<22} {}", p.name, p.licence, p.languages, p.note);
+                        println!(
+                            "{:<40} {:<11} {:<22} {}",
+                            p.name, p.licence, p.languages, p.note
+                        );
                     }
                 }
                 ModelCmd::Pull { name } => {
@@ -861,15 +881,14 @@ fn embed(cfg: &Config) -> Result<()> {
         t.elapsed().as_secs_f32()
     );
     let t = std::time::Instant::now();
-    let r =
-        meowlaw_search::vector::build_similarity(&store, embedder.model(), cfg.similarity)?;
+    let r = meowlaw_search::vector::build_similarity(&store, embedder.model(), cfg.similarity)?;
     eprintln!(
         "similarity edges built in {:.1}s",
         t.elapsed().as_secs_f32()
     );
     print(&serde_json::to_value(r)?);
     Ok(())
-        }
+}
 
 fn init(path: &Path) -> Result<()> {
     if path.exists() {
@@ -883,4 +902,17 @@ fn init(path: &Path) -> Result<()> {
         path.display()
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Cli;
+    use clap::CommandFactory;
+
+    /// clap's debug assertions catch malformed argument definitions (a
+    /// positional `bool`, duplicate attributes) that only surface at run time.
+    #[test]
+    fn cli_definition_is_valid() {
+        Cli::command().debug_assert();
+    }
 }

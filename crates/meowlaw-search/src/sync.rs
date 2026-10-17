@@ -38,8 +38,10 @@ pub struct SourceEntry {
 
 impl SourcesFile {
     pub fn load(path: &Path) -> Result<(Self, PathBuf)> {
-        let src = std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
-        let f: SourcesFile = toml::from_str(&src).with_context(|| format!("parsing {}", path.display()))?;
+        let src =
+            std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
+        let f: SourcesFile =
+            toml::from_str(&src).with_context(|| format!("parsing {}", path.display()))?;
         let base = path.parent().map(Path::to_path_buf).unwrap_or_default();
         Ok((f, base))
     }
@@ -115,7 +117,9 @@ pub struct SyncReport {
 
 impl SyncReport {
     pub fn changed(&self) -> bool {
-        self.sources.iter().any(|s| s.status == "new" || s.status == "updated")
+        self.sources
+            .iter()
+            .any(|s| s.status == "new" || s.status == "updated")
     }
 }
 
@@ -174,7 +178,11 @@ pub fn sync(
     let mut results = Vec::new();
     let mut applied = false;
     for src in sources {
-        let path = if src.path.is_absolute() { src.path.clone() } else { base.join(&src.path) };
+        let path = if src.path.is_absolute() {
+            src.path.clone()
+        } else {
+            base.join(&src.path)
+        };
         let key = format!("source_hash:{}", path.display());
         let res: Result<SourceResult> = (|| {
             let hash = source_hash(&path)?;
@@ -188,7 +196,11 @@ pub fn sync(
                     lint: None,
                 });
             }
-            let lint = if opts.skip_lint { None } else { lint_source(&path, &src.manifest, registry) };
+            let lint = if opts.skip_lint {
+                None
+            } else {
+                lint_source(&path, &src.manifest, registry)
+            };
             let docs = ing.ingest_path(&path, &src.manifest)?;
             let mut diffs = Vec::new();
             for d in &docs {
@@ -208,7 +220,11 @@ pub fn sync(
                     if opts.fresh {
                         engine.store.delete_corpus(&d.corpus.id)?;
                     }
-                    if opts.fresh || diffs.iter().any(|x| x.corpus == d.corpus.id && !x.is_empty()) {
+                    if opts.fresh
+                        || diffs
+                            .iter()
+                            .any(|x| x.corpus == d.corpus.id && !x.is_empty())
+                    {
                         engine.store.put_document(d)?;
                     }
                 }
@@ -236,8 +252,16 @@ pub fn sync(
             }),
         }
     }
-    let rebuild = if applied { Some(crate::rebuild(engine)?) } else { None };
-    let after = if applied { unresolved_set(engine)? } else { before.clone() };
+    let rebuild = if applied {
+        Some(crate::rebuild(engine)?)
+    } else {
+        None
+    };
+    let after = if applied {
+        unresolved_set(engine)?
+    } else {
+        before.clone()
+    };
     Ok(SyncReport {
         mode: match (opts.fresh, opts.dry_run) {
             (_, true) => "dry-run",
@@ -272,7 +296,10 @@ impl SyncReport {
                 sum(|d| d.changed.len()),
                 sum(|d| d.removed.len()),
                 sum(|d| d.breaks.len()),
-                s.lint.as_ref().map_or(String::new(), |l| format!("{} errors, {} warnings", l.errors, l.warnings)),
+                s.lint.as_ref().map_or(String::new(), |l| format!(
+                    "{} errors, {} warnings",
+                    l.errors, l.warnings
+                )),
             ));
         }
         for s in &self.sources {
@@ -280,7 +307,10 @@ impl SyncReport {
                 o.push_str(&format!("\n**Error in {}:** {e}\n", s.path));
             }
             if let Some(l) = s.lint.as_ref().filter(|l| !l.findings.is_empty()) {
-                o.push_str(&format!("\n**Lint ({}):** run `meowlaw lint` on it for details.\n\n", s.path));
+                o.push_str(&format!(
+                    "\n**Lint ({}):** run `meowlaw lint` on it for details.\n\n",
+                    s.path
+                ));
                 for (file, rule, line, msg) in &l.findings {
                     let at = line.map(|n| format!(":{n}")).unwrap_or_default();
                     o.push_str(&format!("- `{rule}` {file}{at}: {msg}\n"));
@@ -293,7 +323,11 @@ impl SyncReport {
                 o.push_str(&format!("\n## {}\n\n", d.corpus));
                 let list = |o: &mut String, title: &str, ids: &[String]| {
                     if !ids.is_empty() {
-                        o.push_str(&format!("**{title}** ({}): {}\n\n", ids.len(), ids.iter().take(50).cloned().collect::<Vec<_>>().join(", ")));
+                        o.push_str(&format!(
+                            "**{title}** ({}): {}\n\n",
+                            ids.len(),
+                            ids.iter().take(50).cloned().collect::<Vec<_>>().join(", ")
+                        ));
                     }
                 };
                 if d.metadata_changed {
@@ -303,7 +337,10 @@ impl SyncReport {
                 list(&mut o, "Changed", &d.changed);
                 list(&mut o, "Removed", &d.removed);
                 if !d.breaks.is_empty() {
-                    o.push_str(&format!("**Citations that will no longer resolve** ({}):\n\n", d.breaks.len()));
+                    o.push_str(&format!(
+                        "**Citations that will no longer resolve** ({}):\n\n",
+                        d.breaks.len()
+                    ));
                     for b in d.breaks.iter().take(50) {
                         o.push_str(&format!("- {} cites {} ({})\n", b.source, b.target, b.raw));
                     }

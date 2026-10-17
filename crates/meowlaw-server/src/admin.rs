@@ -66,14 +66,28 @@ fn safe_name(raw: &str) -> String {
     let base = raw.rsplit(['/', '\\']).next().unwrap_or("");
     let mut s: String = base
         .chars()
-        .map(|c| if c.is_alphanumeric() || matches!(c, '.' | '-' | '_') { c } else { '-' })
+        .map(|c| {
+            if c.is_alphanumeric() || matches!(c, '.' | '-' | '_') {
+                c
+            } else {
+                '-'
+            }
+        })
         .collect();
     s = s.trim_start_matches('.').replace(".meta.", "-meta.");
     if s.chars().count() > 120 {
-        let ext = Path::new(&s).extension().and_then(|e| e.to_str()).unwrap_or("").to_string();
+        let ext = Path::new(&s)
+            .extension()
+            .and_then(|e| e.to_str())
+            .unwrap_or("")
+            .to_string();
         s = s.chars().take(100).collect::<String>() + "." + &ext;
     }
-    if s.is_empty() || !s.contains('.') { "upload.txt".into() } else { s }
+    if s.is_empty() || !s.contains('.') {
+        "upload.txt".into()
+    } else {
+        s
+    }
 }
 
 fn sidecar(file: &Path) -> PathBuf {
@@ -104,8 +118,8 @@ async fn read_upload(mut mp: Multipart) -> Result<Upload, Response> {
             "manifest" => {
                 let t = field.text().await.map_err(|e| bad(&e))?;
                 if !t.trim().is_empty() {
-                    up.manifest = serde_json::from_str(&t)
-                        .map_err(|e| bad(&format!("manifest: {e}")))?;
+                    up.manifest =
+                        serde_json::from_str(&t).map_err(|e| bad(&format!("manifest: {e}")))?;
                 }
             }
             "dry_run" => up.dry_run = field.text().await.map_err(|e| bad(&e))? == "true",
@@ -148,6 +162,43 @@ impl Scratch {
 impl Drop for Scratch {
     fn drop(&mut self) {
         let _ = std::fs::remove_dir_all(&self.0);
+    }
+}
+
+/// The upload (and sidecar) a same-named upload is about to replace, parked
+/// in the scratch directory so a failed update puts the old files back and
+/// `uploads/` keeps rebuilding the corpus the store still holds.
+struct Previous {
+    /// (original path, parked path)
+    moved: Vec<(PathBuf, PathBuf)>,
+}
+
+impl Previous {
+    fn park(path: &Path, scratch: &Path) -> anyhow::Result<Self> {
+        let mut moved = Vec::new();
+        for p in [path.to_path_buf(), sidecar(path)] {
+            if p.is_file() {
+                let parked = scratch.join(p.file_name().unwrap_or_default());
+                std::fs::rename(&p, &parked)?;
+                moved.push((p, parked));
+            }
+        }
+        Ok(Self { moved })
+    }
+
+    fn restore(&self) {
+        for (orig, parked) in &self.moved {
+            let _ = std::fs::rename(parked, orig);
+        }
+    }
+}
+
+/// Undo a failed upload: drop the new files and put the previous ones back.
+fn discard(path: &Path, previous: Option<&Previous>) {
+    let _ = std::fs::remove_file(path);
+    let _ = std::fs::remove_file(sidecar(path));
+    if let Some(p) = previous {
+        p.restore();
     }
 }
 
@@ -228,8 +279,16 @@ pub async fn preview(State(state): State<AppState>, headers: HeaderMap, mp: Mult
         let lint = meowlaw_lint::lint_file(
             &path,
             &meowlaw_lint::LintOptions {
-                profile: up.manifest.profile.as_deref().and_then(|p| state.engine.registry().get(p).ok()),
-                kind: up.manifest.kind.as_deref().and_then(meowlaw_core::CorpusKind::parse),
+                profile: up
+                    .manifest
+                    .profile
+                    .as_deref()
+                    .and_then(|p| state.engine.registry().get(p).ok()),
+                kind: up
+                    .manifest
+                    .kind
+                    .as_deref()
+                    .and_then(meowlaw_core::CorpusKind::parse),
             },
         )?;
         Ok(json!({ "profile": report, "text": report.render(), "lint": lint }))
@@ -251,18 +310,20 @@ pub async fn ingest(State(state): State<AppState>, headers: HeaderMap, mp: Multi
         let _lock = WRITE
             .try_lock()
             .map_err(|_| anyhow::anyhow!("another ingest is running; try again when it finishes"))?;
-        let scratch;
-        let path = if up.dry_run {
-            scratch = Scratch::new(&state)?;
-            stage(&scratch.0, &up)?
+        let scratch = Scratch::new(&state)?;
+        let (path, previous) = if up.dry_run {
+            (stage(&scratch.0, &up)?, None)
         } else {
-            stage(&uploads_dir(&state), &up)?
+            let dir = uploads_dir(&state);
+            std::fs::create_dir_all(&dir)?;
+            let previous = Previous::park(&dir.join(&up.name), &scratch.0)?;
+            (stage(&dir, &up)?, Some(previous))
         };
         let entry = SourceEntry {
             path: path.clone(),
             manifest: Manifest::default(),
         };
-        let report = meowlaw_search::sync::sync(
+        let report = match meowlaw_search::sync::sync(
             &state.engine,
             state.engine.registry(),
             std::slice::from_ref(&entry),
@@ -271,13 +332,20 @@ pub async fn ingest(State(state): State<AppState>, headers: HeaderMap, mp: Multi
                 dry_run: up.dry_run,
                 ..Default::default()
             },
-        )?;
+        ) {
+            Ok(r) => r,
+            Err(e) => {
+                if !up.dry_run {
+                    discard(&path, previous.as_ref());
+                }
+                return Err(e);
+            }
+        };
         let markdown = report.to_markdown();
         if let Some(err) = report.sources.iter().find_map(|s| s.error.clone()) {
             if !up.dry_run {
-                // Keep nothing that failed to ingest.
-                let _ = std::fs::remove_file(&path);
-                let _ = std::fs::remove_file(sidecar(&path));
+                // Keep nothing that failed to ingest; restore what it replaced.
+                discard(&path, previous.as_ref());
             }
             anyhow::bail!(err);
         }
@@ -340,7 +408,11 @@ pub struct RemoveReq {
 }
 
 /// `POST /api/admin/remove`: delete a corpus, and its upload if it has one.
-pub async fn remove(State(state): State<AppState>, headers: HeaderMap, Json(req): Json<RemoveReq>) -> Response {
+pub async fn remove(
+    State(state): State<AppState>,
+    headers: HeaderMap,
+    Json(req): Json<RemoveReq>,
+) -> Response {
     if let Some(r) = guard(&state, &headers) {
         return r;
     }
@@ -364,12 +436,19 @@ pub async fn remove(State(state): State<AppState>, headers: HeaderMap, Json(req)
                 if m.and_then(|m| m.id).as_deref() == Some(req.corpus.as_str()) {
                     std::fs::remove_file(&p)?;
                     let _ = std::fs::remove_file(sidecar(&p));
-                    let _ = state.engine.store.set_kv(&format!("source_hash:{}", p.display()), "");
+                    let _ = state
+                        .engine
+                        .store
+                        .set_kv(&format!("source_hash:{}", p.display()), "");
                     files.push(name);
                 }
             }
         }
-        let rebuild = if removed { Some(meowlaw_search::rebuild(&state.engine)?) } else { None };
+        let rebuild = if removed {
+            Some(meowlaw_search::rebuild(&state.engine)?)
+        } else {
+            None
+        };
         Ok(json!({ "removed": removed, "files": files, "rebuild": rebuild }))
     })
     .await

@@ -204,7 +204,11 @@ pub fn call(engine: &Engine, name: &str, args: &Value) -> Result<Value> {
                 exclude: args
                     .get("_exclude")
                     .and_then(Value::as_array)
-                    .map(|a| a.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+                    .map(|a| {
+                        a.iter()
+                            .filter_map(|v| v.as_str().map(String::from))
+                            .collect()
+                    })
                     .unwrap_or_default(),
                 as_at: s(args, "as_at").map(String::from),
             };

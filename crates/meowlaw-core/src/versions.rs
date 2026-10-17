@@ -10,15 +10,23 @@ use crate::Corpus;
 use std::collections::{BTreeMap, HashSet};
 
 pub fn work_of(c: &Corpus) -> Option<&str> {
-    c.meta.get("work").and_then(|v| v.as_str()).filter(|s| !s.is_empty())
+    c.meta
+        .get("work")
+        .and_then(|v| v.as_str())
+        .filter(|s| !s.is_empty())
 }
 
 pub fn language_of(c: &Corpus) -> Option<&str> {
-    c.meta.get("language").and_then(|v| v.as_str()).filter(|s| !s.is_empty())
+    c.meta
+        .get("language")
+        .and_then(|v| v.as_str())
+        .filter(|s| !s.is_empty())
 }
 
 /// Versions grouped by (work, language), oldest first.
-fn groups<'a>(corpora: impl IntoIterator<Item = &'a Corpus>) -> BTreeMap<(String, String), Vec<&'a Corpus>> {
+fn groups<'a>(
+    corpora: impl IntoIterator<Item = &'a Corpus>,
+) -> BTreeMap<(String, String), Vec<&'a Corpus>> {
     let mut g: BTreeMap<(String, String), Vec<&Corpus>> = BTreeMap::new();
     for c in corpora {
         if let Some(w) = work_of(c) {
@@ -39,7 +47,9 @@ pub fn superseded<'a>(corpora: impl IntoIterator<Item = &'a Corpus>) -> HashSet<
         .into_values()
         .flat_map(|v| {
             let n = v.len();
-            v.into_iter().take(n.saturating_sub(1)).map(|c| c.id.clone())
+            v.into_iter()
+                .take(n.saturating_sub(1))
+                .map(|c| c.id.clone())
         })
         .collect()
 }
@@ -47,7 +57,10 @@ pub fn superseded<'a>(corpora: impl IntoIterator<Item = &'a Corpus>) -> HashSet<
 /// Corpora not in force on `date`: for each work and language, every
 /// version except the latest with `as_at <= date` (all of them when none
 /// is that old). Corpora without a `work` are always in force.
-pub fn not_in_force_at<'a>(corpora: impl IntoIterator<Item = &'a Corpus>, date: &str) -> HashSet<String> {
+pub fn not_in_force_at<'a>(
+    corpora: impl IntoIterator<Item = &'a Corpus>,
+    date: &str,
+) -> HashSet<String> {
     let mut out = HashSet::new();
     for v in groups(corpora).into_values() {
         let keep = v
@@ -99,7 +112,10 @@ mod tests {
             c("act-fr-2025", "act", "fr", "2025-03-01"),
         ];
         let s = superseded(&cs);
-        assert_eq!(s, HashSet::from(["act-2020".to_string(), "act-2023".to_string()]));
+        assert_eq!(
+            s,
+            HashSet::from(["act-2020".to_string(), "act-2023".to_string()])
+        );
         let at = not_in_force_at(&cs, "2024-01-01");
         assert!(!at.contains("act-2023"));
         assert!(at.contains("act-2025") && at.contains("act-2020"));

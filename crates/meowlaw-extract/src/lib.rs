@@ -389,7 +389,14 @@ fn table_items(text: &str, profile: &Profile, found: &mut Vec<ParsedCitation>) {
         let next = joined_at.and_then(|at| {
             found.iter().position(|c| {
                 c.start == at
-                    && matches!(&c.cited, Cited::Provision { relative: false, item: None, .. })
+                    && matches!(
+                        &c.cited,
+                        Cited::Provision {
+                            relative: false,
+                            item: None,
+                            ..
+                        }
+                    )
             })
         });
         match next {

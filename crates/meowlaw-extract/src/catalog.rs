@@ -90,7 +90,13 @@ impl Catalog {
             .filter(|c| work_of(c) == Some(work) && !self.superseded.contains(&c.id))
             .collect();
         let pick = |lang: Option<&str>| {
-            lang.and_then(|l| current.iter().filter(|c| language_of(c) == Some(l)).map(|c| c.id.clone()).min())
+            lang.and_then(|l| {
+                current
+                    .iter()
+                    .filter(|c| language_of(c) == Some(l))
+                    .map(|c| c.id.clone())
+                    .min()
+            })
         };
         pick(language_of(citing))
             .or_else(|| (!self.superseded.contains(target)).then(|| target.to_string()))

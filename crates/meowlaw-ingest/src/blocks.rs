@@ -136,7 +136,10 @@ pub fn markdown(src: &str) -> Vec<Block> {
             flush(&mut para, &mut out);
         } else if t.trim_start().starts_with('|') {
             // Consecutive pipe-table lines stay one block.
-            if !para.first().is_some_and(|l| l.trim_start().starts_with('|')) {
+            if !para
+                .first()
+                .is_some_and(|l| l.trim_start().starts_with('|'))
+            {
                 flush(&mut para, &mut out);
             }
             para.push(t);
@@ -144,7 +147,10 @@ pub fn markdown(src: &str) -> Vec<Block> {
             flush(&mut para, &mut out);
             para.push(t);
         } else {
-            if para.first().is_some_and(|l| l.trim_start().starts_with('|')) {
+            if para
+                .first()
+                .is_some_and(|l| l.trim_start().starts_with('|'))
+            {
                 flush(&mut para, &mut out);
             }
             para.push(t);
@@ -509,7 +515,8 @@ pub fn xml(src: &str) -> Result<Vec<Block>> {
                     }
                     if t.depth == 0 {
                         let t = tbl.take().unwrap();
-                        let rows: Vec<Vec<String>> = t.rows.into_iter().filter(|r| !r.is_empty()).collect();
+                        let rows: Vec<Vec<String>> =
+                            t.rows.into_iter().filter(|r| !r.is_empty()).collect();
                         let header = t.th.first() == Some(&true) && rows.len() > 1;
                         let md = crate::tables::to_markdown(&rows, header);
                         if !md.is_empty() {
@@ -860,7 +867,10 @@ mod tests {
             <p>After.</p></content></section></body></act></akomaNtoso>"#;
         let b = xml(src).unwrap();
         assert_eq!(tables(&b), vec![TABLE_MD], "{b:#?}");
-        assert!(b.iter().any(|x| matches!(x, Block::Para(t) if t == "After.")));
+        assert!(
+            b.iter()
+                .any(|x| matches!(x, Block::Para(t) if t == "After."))
+        );
     }
 
     #[test]

@@ -415,12 +415,19 @@ fn table_item_citations() {
     assert_eq!(pcs.len(), 2, "{pcs:#?}");
     assert_eq!(pcs[0].raw, "item 3 of the table in section 40-60");
     match &pcs[0].cited {
-        Cited::Provision { numbers, item, relative, .. } => {
+        Cited::Provision {
+            numbers,
+            item,
+            relative,
+            ..
+        } => {
             assert_eq!(numbers, &vec!["40-60".to_string()]);
             assert_eq!(item.as_deref(), Some("3"));
             assert!(!relative);
         }
         c => panic!("{c:?}"),
     }
-    assert!(matches!(&pcs[1].cited, Cited::Provision { relative: true, item: Some(i), .. } if i == "2"));
+    assert!(
+        matches!(&pcs[1].cited, Cited::Provision { relative: true, item: Some(i), .. } if i == "2")
+    );
 }

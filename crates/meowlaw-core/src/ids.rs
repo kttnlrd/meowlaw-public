@@ -79,7 +79,8 @@ pub fn citation_key(s: &str) -> String {
     let mut prev: Option<char> = None;
     for c in s.chars().filter(|c| *c != '.') {
         if let Some(p) = prev
-            && ((p.is_ascii_digit() && c.is_alphabetic()) || (p.is_alphabetic() && c.is_ascii_digit()))
+            && ((p.is_ascii_digit() && c.is_alphabetic())
+                || (p.is_alphabetic() && c.is_ascii_digit()))
         {
             out.push(' ');
         }

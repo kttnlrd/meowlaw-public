@@ -9,8 +9,8 @@
 
 pub mod blocks;
 pub mod paragraphs;
-pub mod tables;
 pub mod structure;
+pub mod tables;
 
 use anyhow::{Context, Result, bail};
 use meowlaw_core::ids::{citation_key, slug};
@@ -237,9 +237,7 @@ impl Ingester {
             }
             slug(&stem)
         });
-        if id.is_empty() || id.contains(':') || id.contains('/') {
-            bail!("corpus id `{id}` must be a non-empty slug without `:` or `/`");
-        }
+        check_corpus_id(&id)?;
         let corpus = Corpus {
             id,
             title,
@@ -357,17 +355,32 @@ pub fn read_json_documents(path: &Path) -> Result<Vec<Document>> {
     Ok(docs)
 }
 
+/// A corpus id is a slug: node ids are `<corpus>:<rest>` and definition ids
+/// `def:<corpus>:<term>`, so the id must not contain the separators and must
+/// not be `def` itself, or the corpus of an id could not be read back from it.
+pub fn check_corpus_id(id: &str) -> Result<()> {
+    if id.is_empty() || id == "def" || id.contains(':') || id.contains('/') {
+        bail!("corpus id `{id}` must be a non-empty slug without `:` or `/`, and not `def`");
+    }
+    Ok(())
+}
+
 /// Structural checks shared by every ingest path.
 pub fn validate(doc: &Document) -> Result<()> {
+    let cid = &doc.corpus.id;
+    check_corpus_id(cid)?;
+    let prefix = format!("{cid}:");
     let mut seen = std::collections::HashSet::new();
     let mut has_root = false;
     for n in &doc.nodes {
-        if n.corpus != doc.corpus.id {
+        if n.corpus != *cid {
+            bail!("node {} belongs to corpus {} not {}", n.id, n.corpus, cid);
+        }
+        // Access control and graph lookups read a node's corpus from its id.
+        if n.id != *cid && !n.id.starts_with(&prefix) {
             bail!(
-                "node {} belongs to corpus {} not {}",
-                n.id,
-                n.corpus,
-                doc.corpus.id
+                "node id `{}` must be the corpus id or start with `{prefix}`",
+                n.id
             );
         }
         if !seen.insert(n.id.as_str()) {
@@ -385,4 +398,39 @@ pub fn validate(doc: &Document) -> Result<()> {
         bail!("corpus {} has no root node", doc.corpus.id);
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod validate_tests {
+    use super::validate;
+    use serde_json::json;
+
+    fn doc(corpus: &str, node_id: &str) -> meowlaw_core::Document {
+        serde_json::from_value(json!({
+            "corpus": { "id": corpus, "title": "T", "kind": "secondary" },
+            "nodes": [
+                { "id": corpus, "corpus": corpus, "kind": "root", "parent": null, "ordinal": 0, "text": "", "title": "T" },
+                { "id": node_id, "corpus": corpus, "kind": "chunk", "parent": corpus, "ordinal": 1, "text": "x", "title": "c" }
+            ]
+        }))
+        .unwrap()
+    }
+
+    #[test]
+    fn node_ids_carry_the_corpus_prefix() {
+        assert!(validate(&doc("handbook", "handbook:c1")).is_ok());
+        let e = validate(&doc("handbook", "c1")).unwrap_err().to_string();
+        assert!(
+            e.contains("must be the corpus id or start with `handbook:`"),
+            "{e}"
+        );
+        assert!(validate(&doc("handbook", "handbook-2:c1")).is_err());
+    }
+
+    #[test]
+    fn corpus_ids_are_slugs() {
+        assert!(validate(&doc("def", "def:c1")).is_err());
+        assert!(validate(&doc("a:b", "a:b:c1")).is_err());
+        assert!(validate(&doc("a/b", "a/b:c1")).is_err());
+    }
 }

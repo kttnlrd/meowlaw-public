@@ -41,7 +41,13 @@ pub fn to_markdown(rows: &[Row], header: bool) -> String {
         &rows[1..]
     } else {
         let generated: Row = (1..=width)
-            .map(|i| if i == 1 && first_col_is_items(rows) { "Item".to_string() } else { format!("Column {i}") })
+            .map(|i| {
+                if i == 1 && first_col_is_items(rows) {
+                    "Item".to_string()
+                } else {
+                    format!("Column {i}")
+                }
+            })
             .collect();
         out.push(line(&generated));
         rows
@@ -51,8 +57,9 @@ pub fn to_markdown(rows: &[Row], header: bool) -> String {
     out.join("\n")
 }
 
-static ITEM_ID: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r"^\(?[0-9]{1,3}[A-Z]{0,3}(?:\.[0-9]{1,3}[A-Z]{0,2})?\)?\.?$").unwrap());
+static ITEM_ID: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^\(?[0-9]{1,3}[A-Z]{0,3}(?:\.[0-9]{1,3}[A-Z]{0,2})?\)?\.?$").unwrap()
+});
 
 /// "1", "2A", "3.1", "(4)": an item identifier in a table's first column.
 pub fn is_item_id(s: &str) -> bool {
@@ -267,7 +274,13 @@ fn table_at(parsed: &[Vec<(usize, String)>], start: usize) -> Option<(usize, Str
 pub fn table_items(text: &str) -> Vec<String> {
     text.lines()
         .filter(|l| l.trim_start().starts_with('|'))
-        .filter_map(|l| l.trim().trim_matches('|').split('|').next().map(|c| c.trim().to_string()))
+        .filter_map(|l| {
+            l.trim()
+                .trim_matches('|')
+                .split('|')
+                .next()
+                .map(|c| c.trim().to_string())
+        })
         .filter(|c| is_item_id(c))
         .collect()
 }
@@ -292,11 +305,19 @@ Prose resumes here after the table.";
     fn rebuilds_layout_table() {
         let segs = detect_layout_tables(LAYOUT);
         assert_eq!(segs.len(), 3, "{segs:#?}");
-        let Segment::Table(t) = &segs[1] else { panic!("{segs:#?}") };
+        let Segment::Table(t) = &segs[1] else {
+            panic!("{segs:#?}")
+        };
         let lines: Vec<&str> = t.lines().collect();
         assert_eq!(lines[0], "| Item | In this case: | The cost is: |");
-        assert_eq!(lines[2], "| 1 | A depreciating asset you hold under an arrangement | its market value at that time |");
-        assert_eq!(lines[3], "| 2 | A depreciating asset you acquired by gift | the amount you paid |");
+        assert_eq!(
+            lines[2],
+            "| 1 | A depreciating asset you hold under an arrangement | its market value at that time |"
+        );
+        assert_eq!(
+            lines[3],
+            "| 2 | A depreciating asset you acquired by gift | the amount you paid |"
+        );
         assert_eq!(lines[4], "| 3 | Any other case | nil |");
         assert!(matches!(&segs[2], Segment::Text(s) if s.contains("Prose resumes")));
         assert_eq!(table_items(t), vec!["1", "2", "3"]);
@@ -310,12 +331,18 @@ make a determination        taxpayer has lodged
 under this section          a return for the year
 at any time                 in question.";
         let segs = detect_layout_tables(two_col);
-        assert!(segs.iter().all(|s| matches!(s, Segment::Text(_))), "{segs:#?}");
+        assert!(
+            segs.iter().all(|s| matches!(s, Segment::Text(_))),
+            "{segs:#?}"
+        );
     }
 
     #[test]
     fn markdown_rendering() {
         let rows = vec![vec!["1".into(), "a|b".into()], vec!["2".into(), "c".into()]];
-        assert_eq!(to_markdown(&rows, false), "| Item | Column 2 |\n| --- | --- |\n| 1 | a\\|b |\n| 2 | c |");
+        assert_eq!(
+            to_markdown(&rows, false),
+            "| Item | Column 2 |\n| --- | --- |\n| 1 | a\\|b |\n| 2 | c |"
+        );
     }
 }

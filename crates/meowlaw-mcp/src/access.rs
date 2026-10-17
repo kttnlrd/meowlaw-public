@@ -59,6 +59,9 @@ impl Scope {
 const ID_ARGS: &[&str] = &["id", "from", "to", "corpus"];
 
 pub fn call_scoped(engine: &Engine, name: &str, args: &Value, scope: &Scope) -> Result<Value> {
+    if !args.is_object() {
+        bail!("tool arguments must be a JSON object");
+    }
     if scope.is_unrestricted() {
         return tools::call(engine, name, args);
     }
@@ -101,7 +104,16 @@ pub fn call_scoped(engine: &Engine, name: &str, args: &Value, scope: &Scope) -> 
 
 /// Keys whose string value is the id of the item an object describes, or of
 /// a node it links.
-const LINK_KEYS: &[&str] = &["id", "source", "target", "scope", "corpus", "example_source", "points_to", "node_id"];
+const LINK_KEYS: &[&str] = &[
+    "id",
+    "source",
+    "target",
+    "scope",
+    "corpus",
+    "example_source",
+    "points_to",
+    "node_id",
+];
 /// Keys whose object value describes the item (`{ "definition": {...} }`).
 const NESTED: &[&str] = &["definition", "corpus", "node"];
 
@@ -113,7 +125,9 @@ fn object_hidden(o: &serde_json::Map<String, Value>, scope: &Scope) -> bool {
         if is_ref && matches!(*k, "target" | "id") {
             return false;
         }
-        o.get(*k).and_then(Value::as_str).is_some_and(|s| scope.hides(s))
+        o.get(*k)
+            .and_then(Value::as_str)
+            .is_some_and(|s| scope.hides(s))
     }) || NESTED.iter().any(|k| {
         o.get(*k)
             .and_then(|n| n.get("id"))
@@ -146,7 +160,10 @@ pub fn redact(v: &mut Value, scope: &Scope) {
         Value::Object(o) => {
             if o.contains_key("raw") {
                 for k in ["target", "id"] {
-                    if o.get(k).and_then(Value::as_str).is_some_and(|s| scope.hides(s)) {
+                    if o.get(k)
+                        .and_then(Value::as_str)
+                        .is_some_and(|s| scope.hides(s))
+                    {
                         o.insert(k.into(), Value::Null);
                     }
                 }
@@ -163,6 +180,16 @@ pub fn redact(v: &mut Value, scope: &Scope) {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn scope_hides_by_corpus_prefix() {
+        let scope = Scope::hiding(["handbook".to_string()].into());
+        assert!(scope.hides("handbook"));
+        assert!(scope.hides("handbook:p1"));
+        assert!(scope.hides("def:handbook:leave"));
+        assert!(!scope.hides("handbook-2:p1"));
+        assert!(!scope.hides("other:handbook"));
+    }
 
     #[test]
     fn redacts_hidden_corpora() {

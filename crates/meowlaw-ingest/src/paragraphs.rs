@@ -369,7 +369,10 @@ mod tests {
     #[test]
     fn tables_survive_tidying_and_markers() {
         let table = "| Item | Rule |\n| --- | --- |\n| 1 | 2. Not a paragraph. |";
-        assert_eq!(tidy_lines(&format!("The table:\n{table}\nAfter it.")), format!("The table:\n{table}\nAfter it."));
+        assert_eq!(
+            tidy_lines(&format!("The table:\n{table}\nAfter it.")),
+            format!("The table:\n{table}\nAfter it.")
+        );
         assert!(in_table_row(table, table.find("2.").unwrap()));
         assert!(!in_table_row("x\n2. Yes", 2));
     }

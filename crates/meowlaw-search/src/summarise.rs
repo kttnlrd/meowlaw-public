@@ -81,7 +81,11 @@ pub fn label(model: &str) -> String {
     format!("machine-generated ({model}), not reviewed")
 }
 
-pub fn summarise(store: &Store, cfg: &SummaryConfig, opts: SummariseOptions) -> Result<SummariseReport> {
+pub fn summarise(
+    store: &Store,
+    cfg: &SummaryConfig,
+    opts: SummariseOptions,
+) -> Result<SummariseReport> {
     if cfg.url.is_empty() || cfg.model.is_empty() {
         bail!("set url and model under [summaries] in meowlaw.toml");
     }
@@ -90,7 +94,7 @@ pub fn summarise(store: &Store, cfg: &SummaryConfig, opts: SummariseOptions) -> 
         .as_deref()
         .and_then(|v| std::env::var(v).ok())
         .filter(|k| !k.is_empty());
-    let agent = ureq::Agent::new_with_defaults();
+    let agent = crate::vector::http_agent(Some(std::time::Duration::from_secs(300)));
     let prompt = cfg.prompt.replace("{words}", &cfg.words.to_string());
     let mut report = SummariseReport::default();
     for mut doc in store.documents()? {
@@ -123,7 +127,9 @@ pub fn summarise(store: &Store, cfg: &SummaryConfig, opts: SummariseOptions) -> 
             .map(|b| format!("{b:02x}"))
             .collect();
         let key = format!("machine_summary:{}", doc.corpus.id);
-        let cached: Option<Value> = store.get_kv(&key)?.and_then(|s| serde_json::from_str(&s).ok());
+        let cached: Option<Value> = store
+            .get_kv(&key)?
+            .and_then(|s| serde_json::from_str(&s).ok());
         let id = doc.corpus.id.clone();
         let text = match cached.filter(|c| c["hash"] == hash.as_str()) {
             Some(c) => {
@@ -137,9 +143,19 @@ pub fn summarise(store: &Store, cfg: &SummaryConfig, opts: SummariseOptions) -> 
                 report.pending.push(id);
                 continue;
             }
-            None => match complete(&agent, cfg, api_key.as_deref(), &prompt, &doc.corpus.title, &input) {
+            None => match complete(
+                &agent,
+                cfg,
+                api_key.as_deref(),
+                &prompt,
+                &doc.corpus.title,
+                &input,
+            ) {
                 Ok(t) => {
-                    store.set_kv(&key, &json!({ "hash": hash, "text": t, "model": cfg.model }).to_string())?;
+                    store.set_kv(
+                        &key,
+                        &json!({ "hash": hash, "text": t, "model": cfg.model }).to_string(),
+                    )?;
                     t
                 }
                 Err(e) => {
@@ -154,7 +170,8 @@ pub fn summarise(store: &Store, cfg: &SummaryConfig, opts: SummariseOptions) -> 
         }
         let n = &mut doc.nodes[si];
         n.text = text;
-        n.meta.insert("summary_source".into(), Value::String(label(&cfg.model)));
+        n.meta
+            .insert("summary_source".into(), Value::String(label(&cfg.model)));
         n.meta.insert("machine_generated".into(), Value::Bool(true));
         store.put_document(&doc)?;
         report.generated.push(id);
@@ -207,14 +224,22 @@ fn complete(
             { "role": "user", "content": format!("Title: {title}\n\n{input}") },
         ],
     });
-    let mut req = agent.post(&cfg.url).header("Content-Type", "application/json");
+    let mut req = agent
+        .post(&cfg.url)
+        .header("Content-Type", "application/json");
     if let Some(k) = api_key {
         req = req.header("Authorization", &format!("Bearer {k}"));
     }
     let mut resp = req
         .send(serde_json::to_string(&body)?.as_bytes())
         .with_context(|| format!("POST {}", cfg.url))?;
-    let v: Value = serde_json::from_reader(resp.body_mut().as_reader())?;
+    let reader = resp
+        .body_mut()
+        .with_config()
+        .limit(crate::vector::HTTP_RESPONSE_LIMIT)
+        .reader();
+    let v: Value = serde_json::from_reader(reader)
+        .with_context(|| format!("reading the response from {}", cfg.url))?;
     let text = v["choices"][0]["message"]["content"]
         .as_str()
         .with_context(|| format!("no choices[0].message.content in the response: {v}"))?

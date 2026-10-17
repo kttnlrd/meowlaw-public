@@ -5,10 +5,10 @@ pub mod config;
 
 use axum::Router;
 use axum::body::Body;
+use axum::extract::DefaultBodyLimit;
 use axum::extract::{Query, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::response::{IntoResponse, Json, Response};
-use axum::extract::DefaultBodyLimit;
 use axum::routing::{get, post};
 use meowlaw_mcp::McpServer;
 use meowlaw_mcp::access::Scope;
@@ -94,7 +94,11 @@ fn bearer(headers: &HeaderMap) -> Option<&str> {
 
 /// What this caller may read. `Err` is the response to send instead: an
 /// unknown token, or no token where one is required (`required`).
-fn caller_scope(state: &AppState, headers: &HeaderMap, required: bool) -> Result<Scope, Box<Response>> {
+fn caller_scope(
+    state: &AppState,
+    headers: &HeaderMap,
+    required: bool,
+) -> Result<Scope, Box<Response>> {
     let given = bearer(headers);
     if let (Some(g), Some(t)) = (given, &state.token)
         && constant_time_eq(g.as_bytes(), t.as_bytes())
@@ -103,15 +107,27 @@ fn caller_scope(state: &AppState, headers: &HeaderMap, required: bool) -> Result
     }
     let Some(access) = &state.config.access else {
         // No access control: the main token, when set and required, is the only key.
-        return if required && state.token.is_some() { Err(Box::new(unauthorised())) } else { Ok(Scope::all()) };
+        return if required && state.token.is_some() {
+            Err(Box::new(unauthorised()))
+        } else {
+            Ok(Scope::all())
+        };
     };
     let tags = match given {
-        Some(g) => access.tags_for_token(g).ok_or_else(|| Box::new(unauthorised()))?,
+        Some(g) => access
+            .tags_for_token(g)
+            .ok_or_else(|| Box::new(unauthorised()))?,
         None if required => return Err(Box::new(unauthorised())),
         None => access.anonymous.clone(),
     };
     let corpora = state.engine.store.corpora().map_err(|e| {
-        Box::new((StatusCode::INTERNAL_SERVER_ERROR, Json(json!({ "error": format!("{e:#}") }))).into_response())
+        Box::new(
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "error": format!("{e:#}") })),
+            )
+                .into_response(),
+        )
     })?;
     let hidden = corpora
         .iter()
@@ -220,7 +236,11 @@ async fn tree(
             .into_response();
     };
     if !scope.corpus_visible(&corpus) {
-        return (StatusCode::NOT_FOUND, Json(json!({ "error": "no such corpus" }))).into_response();
+        return (
+            StatusCode::NOT_FOUND,
+            Json(json!({ "error": "no such corpus" })),
+        )
+            .into_response();
     }
     let engine = state.engine.clone();
     let res = tokio::task::spawn_blocking(move || {
@@ -370,7 +390,11 @@ async fn mcp_post(State(state): State<AppState>, headers: HeaderMap, body: Strin
     }
     // /mcp needs a token whenever one is configured.
     let required = state.token.is_some()
-        || state.config.access.as_ref().is_some_and(|a| a.anonymous.is_empty());
+        || state
+            .config
+            .access
+            .as_ref()
+            .is_some_and(|a| a.anonymous.is_empty());
     let scope = match caller_scope(&state, &headers, required) {
         Ok(s) => s,
         Err(r) => return *r,

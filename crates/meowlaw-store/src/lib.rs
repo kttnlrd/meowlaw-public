@@ -332,7 +332,9 @@ impl Store {
         let c = self.conn()?;
         let mut st = c.prepare_cached("SELECT id, text, title FROM nodes WHERE corpus = ?1")?;
         let old: std::collections::HashMap<String, (String, Option<String>)> = st
-            .query_map([&doc.corpus.id], |r| Ok((r.get(0)?, (r.get(1)?, r.get(2)?))))?
+            .query_map([&doc.corpus.id], |r| {
+                Ok((r.get(0)?, (r.get(1)?, r.get(2)?)))
+            })?
             .collect::<rusqlite::Result<_>>()?;
         let existed = self.corpus(&doc.corpus.id)?;
         let mut d = DocDiff {
@@ -346,11 +348,17 @@ impl Store {
             seen.insert(n.id.as_str());
             match old.get(&n.id) {
                 None => d.added.push(n.id.clone()),
-                Some((text, title)) if text != &n.text || title != &n.title => d.changed.push(n.id.clone()),
+                Some((text, title)) if text != &n.text || title != &n.title => {
+                    d.changed.push(n.id.clone())
+                }
                 Some(_) => d.unchanged += 1,
             }
         }
-        d.removed = old.keys().filter(|k| !seen.contains(k.as_str())).cloned().collect();
+        d.removed = old
+            .keys()
+            .filter(|k| !seen.contains(k.as_str()))
+            .cloned()
+            .collect();
         d.removed.sort();
         // Citations elsewhere that point at nodes about to disappear.
         let mut st = c.prepare_cached(
@@ -361,7 +369,11 @@ impl Store {
                 Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
             })? {
                 let (src, raw) = row?;
-                d.breaks.push(BrokenLink { source: src, raw, target: id.clone() });
+                d.breaks.push(BrokenLink {
+                    source: src,
+                    raw,
+                    target: id.clone(),
+                });
             }
         }
         Ok(d)
