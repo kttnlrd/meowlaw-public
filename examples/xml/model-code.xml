@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fictional Akoma Ntoso document. -->
+<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0">
+  <act name="model-code">
+    <meta><identification source="#example"/></meta>
+    <preface><p>Model Code on Widgets</p></preface>
+    <body>
+      <chapter eId="chp_1">
+        <num>CHAPTER I</num>
+        <heading>General provisions</heading>
+        <article eId="art_1">
+          <num>Article 1</num>
+          <heading>Subject matter</heading>
+          <paragraph><content><p>This Code lays down rules on the sale of widgets.</p></content></paragraph>
+        </article>
+        <article eId="art_2">
+          <num>Article 2</num>
+          <heading>Definitions</heading>
+          <paragraph><num>1.</num><content><p>‘seller’ means any person selling widgets in the course of business;</p></content></paragraph>
+          <paragraph><num>2.</num><content><p>‘consumer’ means a natural person acting outside their trade.</p></content></paragraph>
+        </article>
+      </chapter>
+      <chapter eId="chp_2">
+        <num>CHAPTER II</num>
+        <heading>Obligations</heading>
+        <article eId="art_3">
+          <num>Article 3</num>
+          <heading>Information</heading>
+          <paragraph><content><p>A seller shall inform the consumer of the price before the sale.</p></content></paragraph>
+        </article>
+        <article eId="art_4">
+          <num>Article 4</num>
+          <heading>Penalties</heading>
+          <paragraph><content><p>Member States shall lay down penalties for breaches of Article 3 &amp; Article 2(1).</p></content></paragraph>
+        </article>
+      </chapter>
+    </body>
+  </act>
+</akomaNtoso>

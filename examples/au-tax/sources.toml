@@ -1,0 +1,15 @@
+# Used by `meowlaw sync examples/au-tax/sources.toml`. Paths are relative to
+# this file. Any manifest field (kind, profile, id, title, aliases, licence,
+# as_at, ...) can be set per source to override the file's own metadata.
+
+[[source]]
+path = "sources/itaa-1997.json"
+
+[[source]]
+path = "sources/itaa-1936.json"
+
+[[source]]
+path = "sources/tr-2018-5.md"
+
+[[source]]
+path = "sources/bendel-2026-hca-18.md"

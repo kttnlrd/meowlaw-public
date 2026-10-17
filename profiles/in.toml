@@ -1,0 +1,61 @@
+# India. STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in India before it is relied on.
+# Citation forms were checked against Supreme Court of India judgments on
+# sci.gov.in. Statute structure is inherited from `generic`; India Code
+# could not be checked for this starter.
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "in"
+name = "India (starter)"
+description = "Supreme Court of India neutral citation (2024 INSC 756), SCC and SCC OnLine citations, 'Section 32 of the Income Tax Act, 1961' and 'sub-section (1) of Section 7' forms."
+extends = "generic"
+language = "en-IN"
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Supreme Court neutral citation, printed at the head of each judgment:
+# "2024 INSC 756", "2024 INSC 532". The SC notice of 6 July 2023 writes it
+# without spaces ("2023INSC1"), so spaces are optional.
+# Sources: https://api.sci.gov.in/supremecourt/2019/37367/37367_2019_6_1501_56233_Judgement_03-Oct-2024.pdf
+#          https://webapi.sci.gov.in/supremecourt/2024/6361/6361_2024_1_1501_53650_Judgement_18-Jul-2024.pdf
+[[citations]]
+name = "in_insc"
+target = { type = "case" }
+pattern = '\b(?P<cite>[12][0-9]{3}\s?INSC\s?[0-9]{1,5})\b'
+
+# Supreme Court Cases and SCC OnLine, as cited in SC judgments:
+# "(1971) 1 SCC 442", "1957 SCC OnLine SC 18".
+# Sources: https://api.sci.gov.in/supremecourt/2019/37367/37367_2019_6_1501_56233_Judgement_03-Oct-2024.pdf
+#          https://api.sci.gov.in/supremecourt/2023/12064/12064_2023_1_1501_56228_Judgement_03-Oct-2024.pdf
+[[citations]]
+name = "in_scc"
+target = { type = "case" }
+pattern = '(?P<cite>\([12][0-9]{3}\)\s+[0-9]{1,2}\s+SCC\s+[0-9]{1,5}|[12][0-9]{3}\s+SCC\s+OnLine\s+SC\s+[0-9]{1,6})'
+
+# "clause (d) of sub-section (5) of Section 17 of the Central Goods and
+# Services Tax Act, 2017", "Section 32 of the Income Tax Act, 1961".
+# Indian short titles put a comma before the year. Resolves to the section.
+# Source: https://api.sci.gov.in/supremecourt/2019/37367/37367_2019_6_1501_56233_Judgement_03-Oct-2024.pdf
+[[citations]]
+name = "in_section_of_act"
+target = { type = "provision", label = "Section" }
+pattern = '\b(?:(?:sub-)?clauses?\s+\([0-9A-Za-z]{1,6}\)(?:\s+(?:and|to)\s+\([0-9A-Za-z]{1,6}\))?\s+of\s+)?(?:sub-sections?\s+\([0-9A-Za-z]{1,6}\)\s+of\s+)?(?i:sections?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+of\s+the\s+(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+(?:(?:and|of|for|the|in|on|to)\s+)?){1,10}(?:Act|Code),?\s+[0-9]{4}))?'
+
+# "sub-section (2)" on its own: a subsection of the citing section.
+# Source: same judgment ("sub-section (1) of Section 16", "sub-section (2) of Section 16").
+[[citations]]
+name = "in_subsection"
+target = { type = "relative", label = "Subsection" }
+pattern = '\bsub-sections?\s+(?P<nums>\([0-9]+[A-Za-z]{0,2}\)(?:\s*(?:,|and|or|to)\s*\([0-9]+[A-Za-z]{0,2}\))*)'
+
+[label_aliases]
+"sub-section" = "Subsection"
+"sub-sections" = "Subsection"
+
+# Add short titles for the Acts you ingest, e.g.
+#   "CGST Act" = "cgst-act-2017"
+[corpus_aliases]

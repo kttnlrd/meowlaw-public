@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MeowLaw</title>
+  <link rel="icon" href="/brand/favicon">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="top">
+    <button id="drawer-toggle" class="icon drawer-toggle" type="button" aria-label="Sources" aria-controls="sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="#/">
+      <img id="brand-logo" alt="" hidden>
+      <span>
+        <strong id="brand-name">MeowLaw</strong>
+        <small id="brand-tagline"></small>
+      </span>
+    </a>
+    <form id="search-form" class="search" role="search">
+      <input id="q" type="search" placeholder="Search" autocomplete="off" data-i18n-label="search">
+      <select id="mode" data-i18n-label="search_mode">
+        <option value="enriched" data-i18n="enriched">Enriched</option>
+        <option value="basic" data-i18n="basic">Basic</option>
+      </select>
+      <select id="kind" data-i18n-label="source_type"><option value="">All sources</option></select>
+      <button type="submit" data-i18n="search">Search</button>
+    </form>
+    <a id="admin-link" class="admin-link" href="/admin.html" data-i18n="admin_link" hidden>Add sources</a>
+    <button id="theme-toggle" class="icon" type="button" data-i18n-label="toggle_dark">◐</button>
+  </header>
+
+  <div class="layout">
+    <nav id="sidebar" class="sidebar" aria-label="Sources">
+      <label class="src-label" for="source" data-i18n="source">Source</label>
+      <select id="source" aria-label="Source"></select>
+      <input id="tree-filter" type="search" data-i18n-ph="filter_tree" data-i18n-label="filter_tree" hidden>
+      <div id="tree" class="tree" role="tree" hidden></div>
+      <div id="corpora" class="corpora"></div>
+    </nav>
+    <div id="scrim" class="scrim" hidden></div>
+    <main id="main" class="main" tabindex="-1"></main>
+    <aside id="aside" class="aside" aria-label="Related"></aside>
+  </div>
+
+  <footer class="foot"><span id="brand-footer"></span> <button id="token-button" class="linkish" type="button" hidden></button></footer>
+  <div id="popover" class="popover" role="tooltip" hidden></div>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# Hong Kong SAR. STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in Hong Kong before it is relied on.
+# Neutral citations follow Practice Direction 5.5 (in force 1 January 2018).
+# Statute structure is inherited from `generic`.
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "hk"
+name = "Hong Kong (starter)"
+description = "Hong Kong neutral citations (HKCFA, HKCA, HKCFI, HKDC and tribunals, PD 5.5), HKCFAR and HKLRD, Cap. numbers for Ordinances."
+extends = "generic"
+language = "en-HK"
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Every court abbreviation in Practice Direction 5.5, footnote 1:
+#   https://legalref.judiciary.hk/lrs/common/pd/pdcontent.jsp?lang=EN&pdn=PD5.5.htm
+[[citations]]
+name = "hk_neutral"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:HKCFA|HKCA|HKCFI|HKCT|HKDC|HKFC|HKLdT|HKMagC|HKLaT|HKSCT|HKOAT|HKCrC)\s+[0-9]{1,5})'
+
+# Hong Kong Court of Final Appeal Reports: "(2018) 21 HKCFAR 123" (PD 5.5 example).
+# Source: https://legalref.judiciary.hk/lrs/common/pd/pdcontent.jsp?lang=EN&pdn=PD5.5.htm
+# Hong Kong Law Reports & Digest: "[2016] 2 HKLRD 520", seen in FACV 1/2020
+#   https://legalref.judiciary.hk/doc/judg/word/vetted/other/en/2020/FACV000001_2020.doc
+[[citations]]
+name = "hk_report"
+target = { type = "case" }
+pattern = '(?P<cite>\([12][0-9]{3}\)\s+[0-9]{1,2}\s+HKCFAR\s+[0-9]{1,5}|\[[12][0-9]{3}\]\s+[0-9]\s+HKLRD\s+[0-9]{1,5})'
+
+# Ordinance chapter numbers: "Cap 4", "Cap.4A", "Cap.484".
+# Source: https://legalref.judiciary.hk/doc/judg/word/vetted/other/en/2020/FACV000001_2020.doc
+[[citations]]
+name = "hk_cap"
+target = { type = "corpus" }
+pattern = '\b(?P<corpus>Cap\.?\s?[0-9]{1,4}[A-Z]{0,2})\b'
+
+# Map Cap. numbers to the corpus IDs you ingest, e.g.
+#   "Cap. 112" = "cap-112"
+#   "Cap 112" = "cap-112"
+[corpus_aliases]

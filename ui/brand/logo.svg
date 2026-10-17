@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MeowLaw">
+  <path d="M10 54V22l10 8 12-14 12 14 10-8v32z" fill="#5a3fd6" opacity=".14"/>
+  <path d="M14 50V26l8 6 10-12 10 12 8-6v24" fill="none" stroke="#5a3fd6" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="25" cy="40" r="2.6" fill="#5a3fd6"/>
+  <circle cx="39" cy="40" r="2.6" fill="#5a3fd6"/>
+  <path d="M29 46q3 2.5 6 0" fill="none" stroke="#5a3fd6" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

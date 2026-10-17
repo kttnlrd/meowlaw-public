@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MeowLaw ingest</title>
+  <link rel="icon" href="/brand/favicon">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">
+      <img id="brand-logo" alt="" hidden>
+      <span>
+        <strong id="brand-name">MeowLaw</strong>
+        <small data-i18n="admin_title">Add and update sources</small>
+      </span>
+    </a>
+  </header>
+
+  <main id="admin" class="main admin">
+    <p id="disabled" class="empty" hidden></p>
+
+    <section id="panel" hidden>
+      <form id="upload" class="card form">
+        <h2 data-i18n="admin_upload">Upload a source</h2>
+        <p class="hint" data-i18n="admin_upload_hint">Markdown, text, HTML, Akoma Ntoso or USLM XML, DOCX, PDF, or MeowLaw JSON. Uploading a file with the same name again updates that source.</p>
+        <div class="grid">
+          <label class="wide"><span data-i18n="admin_file">File</span>
+            <input id="f-file" name="file" type="file" required accept=".md,.markdown,.txt,.html,.htm,.xml,.akn,.docx,.pdf,.json"></label>
+          <label><span data-i18n="admin_kind">Type</span><select id="f-kind"></select></label>
+          <label><span data-i18n="admin_profile">Profile</span><select id="f-profile"></select></label>
+          <label><span data-i18n="admin_id">ID (optional)</span><input id="f-id" pattern="[a-z0-9][a-z0-9._-]*" placeholder="itaa-1997"></label>
+          <label><span data-i18n="admin_title_field">Title</span><input id="f-title"></label>
+          <label><span data-i18n="admin_jurisdiction">Jurisdiction</span><input id="f-jurisdiction" placeholder="AU"></label>
+          <label><span data-i18n="admin_citations">Citations (comma separated)</span><input id="f-citations" placeholder="[2026] HCA 18"></label>
+          <label><span data-i18n="admin_aliases">Short names (comma separated)</span><input id="f-aliases"></label>
+          <label><span data-i18n="admin_as_at">Current as at</span><input id="f-as_at" type="date"></label>
+          <label><span data-i18n="admin_source_url">Source URL</span><input id="f-source_url" type="url"></label>
+          <label><span data-i18n="admin_licence">Licence</span><input id="f-licence"></label>
+          <label><span data-i18n="admin_content">The file holds</span>
+            <select id="f-content">
+              <option value="" data-i18n="admin_content_full">The full text</option>
+              <option value="summary" data-i18n="admin_content_summary">A summary of a document not held here</option>
+            </select></label>
+          <label class="wide"><span data-i18n="admin_summary">Summary (optional; used for the similarity graph)</span><textarea id="f-summary" rows="3"></textarea></label>
+          <label><span data-i18n="admin_summary_source">Summary written by</span><input id="f-summary_source" placeholder="editor"></label>
+        </div>
+        <div class="actions">
+          <button type="button" id="b-preview" data-i18n="admin_preview">Preview</button>
+          <button type="button" id="b-dry" data-i18n="admin_check">Check changes</button>
+          <button type="submit" id="b-ingest" class="primary" data-i18n="admin_ingest">Ingest</button>
+          <span id="busy" class="hint" hidden></span>
+        </div>
+      </form>
+
+      <section id="result" aria-live="polite"></section>
+
+      <section class="card">
+        <h2 data-i18n="admin_uploads">Uploaded sources</h2>
+        <div id="uploads"></div>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="admin_unresolved">Unresolved citations</h2>
+        <p class="hint" data-i18n="admin_unresolved_hint">Citations that point at nothing loaded. Each row is usually a source to add, or an alias to set in a profile.</p>
+        <div id="unresolved"></div>
+      </section>
+    </section>
+  </main>
+  <script src="/admin.js"></script>
+</body>
+</html>
