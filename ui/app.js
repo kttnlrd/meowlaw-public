@@ -800,7 +800,9 @@ function showDefinition(d) {
 function compilation(c) {
   const m = c && c.meta || {};
   const n = m.compilation_no ?? m.compilation ?? m.version;
-  return n !== undefined && n !== null && n !== "" ? t("compilation", { n }) : "";
+  // 0 means the source did not record one.
+  const known = n !== undefined && n !== null && n !== "" && n !== 0 && n !== "0";
+  return known ? t("compilation", { n }) : "";
 }
 
 // Related column: one collapsible card per relationship, plus the source's
