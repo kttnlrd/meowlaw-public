@@ -1,0 +1,21 @@
+# One-command server: `MEOWLAW_TOKEN=$(openssl rand -hex 32) docker compose up --build`
+# Then open http://localhost:8080 and ingest on the host into ./data (see README).
+services:
+  meowlaw:
+    build: .
+    image: meowlaw
+    ports:
+      - "8080:8080"
+    environment:
+      # Leave unset only on a machine nobody else can reach: without a token
+      # /mcp and the API are open.
+      MEOWLAW_TOKEN: ${MEOWLAW_TOKEN:-}
+    # The image runs as UID 1000. Match it to your user so files in ./data stay yours:
+    # MEOWLAW_UID=$(id -u) docker compose up
+    user: "${MEOWLAW_UID:-1000}"
+    volumes:
+      - ./data:/srv/meowlaw/data
+      # To change settings, copy meowlaw.example.toml to meowlaw.docker.toml, set
+      # bind = "0.0.0.0:8080", edit, and uncomment:
+      # - ./meowlaw.docker.toml:/srv/meowlaw/meowlaw.toml:ro
+    restart: unless-stopped

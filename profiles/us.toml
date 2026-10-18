@@ -1,0 +1,76 @@
+# United States (federal): U.S. Code, CFR, federal reporters.
+
+id = "us"
+name = "United States (federal)"
+description = "U.S.C. and C.F.R. citation forms, Title/Subtitle/Chapter/Subchapter/Part structure, U.S. Reports and Federal Reporter series."
+extends = "generic"
+language = "en-US"
+
+# 162, 1001a, 7701, 1.162-1
+number = '(?:[0-9]+[a-zA-Z]{0,3}(?:[-.][0-9]+[a-zA-Z]{0,3})*|[IVXLC]+\b)'
+
+jurisdiction_tags = ["US"]
+
+[[levels]]
+label = "Title"
+abbrev = "tt"
+rank = 10
+pattern = '^(?i:title)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subtitle"
+abbrev = "stt"
+rank = 15
+pattern = '^(?i:subtitle)\s+(?P<num>[A-Z]|{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Chapter"
+abbrev = "ch"
+rank = 20
+pattern = '^(?i:chapter)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subchapter"
+abbrev = "sch"
+rank = 25
+pattern = '^(?i:subchapter)\s+(?P<num>[A-Z]{1,2}|{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Part"
+abbrev = "pt"
+rank = 30
+pattern = '^(?i:part)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subpart"
+abbrev = "spt"
+rank = 35
+pattern = '^(?i:subpart)\s+(?P<num>[A-Z]{1,2}|{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?:(?i:section|sec\.)\s+|§\s*)(?P<num>{NUM})\b\.?\s*(?P<title>.*)$'
+
+# 26 U.S.C. § 162(a) ; 42 USC 1983 ; 26 C.F.R. § 1.162-1
+[[citations]]
+name = "usc"
+target = { type = "provision", label = "Section" }
+pattern = '(?P<corpus>[0-9]{1,2}\s+U\.?\s?S\.?\s?C\.?(?:\s?A\.?)?)\s*(?:§§?\s*)?(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|-|–|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)'
+
+[[citations]]
+name = "cfr"
+target = { type = "provision", label = "Section" }
+pattern = '(?P<corpus>[0-9]{1,2}\s+C\.?\s?F\.?\s?R\.?)\s*(?:§§?\s*|(?i:part)\s+)?(?P<nums>[0-9]+(?:\.[0-9]+[a-z]?(?:-[0-9]+[a-z]?)?)?)'
+
+[[citations]]
+name = "us_reporter"
+target = { type = "case" }
+pattern = '(?P<cite>[0-9]{1,4}\s+(?:U\.\s?S\.|S\.\s?Ct\.|L\.\s?Ed\.(?:\s?2d)?|F\.(?:\s?2d|\s?3d|\s?4th)?|F\.\s?Supp\.(?:\s?2d|\s?3d)?|T\.C\.)\s+[0-9]{1,5})'
+
+# Map the corpus part of a citation to the corpus ID you ingested, e.g.
+#   "26 U.S.C." = "usc-26"
+#   "26 USC" = "usc-26"
+[corpus_aliases]

@@ -1,0 +1,132 @@
+# Australia (Commonwealth, State and Territory drafting conventions).
+# Extends `generic`; only the differences are listed here.
+
+id = "au"
+name = "Australia"
+description = "Australian drafting: hyphenated section numbers (8-1, 995-1), Subdivision letters (40-B), Roman Part numbers (IVA), bold-italic defined terms, authorised report series."
+extends = "generic"
+language = "en-AU"
+
+# 8-1, 995-1, 40-B, 12A, IVA, 3.1
+number = '(?:[0-9]+[A-Z]{0,4}(?:-[0-9A-Z]+)?(?:\.[0-9]+[A-Z]{0,2})*|[IVXLC]+[A-Z]{0,3}\b)'
+
+jurisdiction_tags = ["Cth", "NSW", "Vic", "Qld", "WA", "SA", "Tas", "ACT", "NT"]
+
+[[levels]]
+label = "Chapter"
+abbrev = "ch"
+rank = 20
+pattern = '(?i)^chapter\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Part"
+abbrev = "pt"
+rank = 30
+pattern = '(?i)^part\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Division"
+abbrev = "div"
+rank = 40
+pattern = '(?i)^division\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subdivision"
+abbrev = "sdiv"
+rank = 45
+pattern = '(?i)^subdivision\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Schedule"
+abbrev = "sch"
+rank = 30
+kind = "schedule"
+pattern = '(?i)^schedule\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Regulation"
+abbrev = "reg"
+rank = 50
+kind = "provision"
+pattern = '(?i)^regulation\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Rule"
+abbrev = "r"
+rank = 50
+kind = "provision"
+pattern = '(?i)^rule\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?:(?i:section)\s+)?(?P<num>[0-9]+[A-Z]{0,4}(?:-[0-9]+[A-Z]{0,4})?)\.?\s+(?P<title>[A-Z][^\n]{1,200})$'
+
+# Authorised and unauthorised report series: (1936) 54 CLR 1, (2004) 219 CLR 365, 2019 ATC 20-700.
+[[citations]]
+name = "au_report"
+target = { type = "case" }
+pattern = '(?P<cite>\([12][0-9]{3}\)\s+[0-9]{1,4}\s+(?:CLR|ALR|FCR|ALJR|ATC|ATR|FLR|NSWLR|VR|Qd R|SASR|WAR|ACSR|IR)\s+[0-9]{1,5})'
+
+[[citations]]
+name = "au_atc"
+target = { type = "case" }
+pattern = '(?P<cite>[12][0-9]{3}\s+ATC\s+[0-9]{1,3}-[0-9]{3})'
+
+# ATO public rulings and determinations, with optional paragraph pinpoint:
+# "TR 2018/5", "TR 2018/5 para 12", "TR 2018/5 at [12]". Resolved against
+# corpus `citations`, like cases.
+[[citations]]
+name = "au_ruling"
+target = { type = "case" }
+pattern = '\b(?P<cite>(?:TR|TD|PCG|PS LA|GSTR|GSTD|MT|CR|PR|LCR|LCG|TA|SGR|SMSFR|SMSFD|FBTR|WETR|MTR|IT|ATO ID) [0-9]{4}/[0-9]{1,4}(?:EC)?)(?:\s*,?\s*(?:at\s+)?(?:(?i:paras?\.?|paragraphs?)\s*|\[)(?P<pin>[0-9]{1,3})\]?)?'
+
+# "Division 280 in Schedule 1 to the Taxation Administration Act 1953": the
+# provision belongs to the named Act, not the citing one. Listed first so it
+# claims the span before the generic patterns.
+[[citations]]
+name = "au_in_schedule_to"
+target = { type = "provision" }
+pattern = '\b(?P<label>Part|Division|Subdivision|[Ss]ections?|[Ss]ubsections?|ss?\.?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)\s+(?:in|of)\s+Schedule\s+{NUM}\s+to\s+(?:the\s+)?(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+){1,10}Act\s+[0-9]{4})'
+
+# "Income Tax Assessment Act 1936 (Cth) s 109D": Act named first, then the section.
+[[citations]]
+name = "au_act_then_section"
+target = { type = "provision", label = "Section" }
+pattern = '(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+){1,10}Act\s+[0-9]{4})(?:\s+\((?:Cth|NSW|Vic|Qld|WA|SA|Tas|ACT|NT)\))?\s+(?:ss?\.?|sections?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)'
+
+# "subsection 43-145(2)", "paragraph 8-1(1)(a)": pinpoints resolve to the section.
+[[citations]]
+name = "au_pinpoint"
+target = { type = "provision", label = "Section" }
+pattern = '\b(?i:subsections?|paragraphs?|subparagraphs?|sub-subparagraphs?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))+(?:\s*(?:,|and|or)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))+)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+(?:Act|Regulations?)(?:\s+[0-9]{4})?))?'
+
+[definitions]
+
+# "In this Division, loan includes:" (scope comes from the phrase).
+[[definitions.patterns]]
+name = "au_in_this_scope"
+pattern = '^\s*(?:\*\*\([0-9]+[A-Z]{0,2}\)\*\*\s*)?In this (?:Act|Part|Division|Subdivision|section)\s*,\s*(?P<term>[a-z][\w’\x27\-]*(?:\s+[a-z][\w’\x27\-]*){0,5})\s+(?:means|includes|has the (?:same )?meaning)\b(?P<rest>.*)'
+
+# Dictionary provisions (995-1, s 6) where entries run together in one paragraph:
+# "... Act 1999. abnormal trading has the meaning given by Subdivision 960-H."
+[[definitions.patterns]]
+name = "au_run_in_dictionary"
+definitions_section_only = true
+pattern = '(?:^|[.;:]\s+|appears:\s+)(?P<term>[A-Za-z0-9%][\w%’\x27\-]*(?:\s+\*?[A-Za-z0-9%’\x27\-]+){0,6}?)\s+(?:has the (?:same )?meaning|means)\b'
+
+# AustLII copies of Commonwealth court and tribunal decisions, from the
+# medium-neutral citation. Other links (court websites) go in each case's
+# `[[meta.links]]` because their URLs are not derivable from the citation.
+[[links]]
+label = "AustLII"
+citation = '^\[(?P<year>[12][0-9]{3})\]\s+(?P<court>HCA|FCA|FCAFC|AATA)\s+(?P<num>[0-9]+)$'
+url = "https://www.austlii.edu.au/cgi-bin/viewdoc/au/cases/cth/{court}/{year}/{num}.html"
+
+# Add short titles for the Acts you ingest, e.g.
+#   "ITAA 1997" = "itaa-1997"
+# They are matched case-sensitively immediately after a citation ("s 8-1 ITAA 1997")
+# and inside `of the ...` groups.
+[corpus_aliases]

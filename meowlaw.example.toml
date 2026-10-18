@@ -1,0 +1,129 @@
+# MeowLaw configuration. Copy to meowlaw.toml (or run `meowlaw init`).
+# Relative paths resolve against this file's directory.
+
+[storage]
+data_dir = "data"          # meowlaw.db + index/
+profiles_dir = "profiles"  # your own *.toml profiles; override built-ins by id
+
+[server]
+bind = "127.0.0.1:8080"
+# Bearer token is read from this environment variable. Unset = no auth
+# (only acceptable on localhost).
+token_env = "MEOWLAW_TOKEN"
+# Also require the token for /api/*.
+protect_api = false
+# Browser origins allowed to call /api/*, the ingest page and /mcp (DNS
+# rebinding and CSRF protection). The server's own localhost origin is always
+# included; behind a reverse proxy, add the public origin (https://law.example.com).
+# Clients that send no Origin header (Claude Desktop, Claude Code, CLI tools)
+# are always allowed.
+allowed_origins = ["http://localhost:8080", "http://127.0.0.1:8080"]
+ui_dir = "ui"
+mcp_name = "meowlaw"
+# Ingest page at /admin.html (upload, preview, check changes, ingest, remove).
+# Needs the token when one is set; without a token, only on a localhost bind.
+allow_ingest = false
+max_upload_mb = 200
+
+# Stemmer for keyword search: english, french, german, spanish, portuguese,
+# italian, dutch, swedish, norwegian, danish, finnish, russian, or "none".
+# Changing it rebuilds the search index on the next command.
+[search]
+language = "english"
+# Search mode for the UI and for API/MCP calls that do not name one:
+# "enriched" (citations, definitions, graph, vectors) or "basic" (keywords only).
+mode = "enriched"
+
+[branding]
+name = "MeowLaw"
+tagline = "Open legal research for any jurisdiction"
+logo = "ui/brand/logo.svg"
+favicon = "ui/brand/favicon.svg"
+# footer = "Shown under every page and in Settings; leave unset for none."
+font_body = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"
+font_heading = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"
+font_mono = "ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace"
+
+# Any key here becomes a CSS custom property (--primary, --bg, ...). The UI
+# reads: bg, surface, surface-2, surface-sunken, text, muted, border,
+# line-strong, primary, primary-contrast, accent, warn, highlight, link, text-link.
+[branding.colors]        # light theme (the default)
+bg = "#f7f6f2"
+surface = "#ffffff"
+surface-2 = "#efede8"
+surface-sunken = "#ebe8e1"
+text = "#1b1d21"
+muted = "#5a5f69"
+border = "#dad7cf"
+line-strong = "#8e8b84"
+primary = "#2457c5"
+primary-contrast = "#ffffff"
+accent = "#b23a6e"
+warn = "#9a5b00"
+highlight = "#fff1a8"
+link = "#0b6e99"
+text-link = "#1a4fb5"   # links and defined terms inside legal text
+
+[branding.dark]          # dark theme
+bg = "#16181c"
+surface = "#1f2227"
+surface-2 = "#292d33"
+surface-sunken = "#101215"
+text = "#e9e7e2"
+muted = "#a3a8b1"
+border = "#353a42"
+line-strong = "#6c727c"
+primary = "#6b9cf2"
+primary-contrast = "#0f1115"
+accent = "#f08fc0"
+warn = "#f0b35a"
+highlight = "#3d3608"
+link = "#62c7e2"
+text-link = "#8ab7ff"
+
+# Groups in the left drawer, in order. A source joins the first group listing
+# its kind (legislation, instrument, rule_set, case, treaty, guidance,
+# secondary). To place one source elsewhere, set `group = "..."` in its
+# front matter, sidecar or corpus.toml [meta]. Add, rename or reorder freely.
+[[source_groups]]
+label = "Legislation"
+kinds = ["legislation", "instrument"]
+
+[[source_groups]]
+label = "Case law"
+kinds = ["case"]
+
+[[source_groups]]
+label = "Regulatory resources"
+kinds = ["guidance", "treaty", "rule_set", "secondary"]
+
+# Optional dense vectors. Any OpenAI-compatible endpoint works, including a
+# local Ollama (`ollama pull nomic-embed-text`). Run `meowlaw embed` after ingest.
+# [embeddings]
+# url = "http://localhost:11434/v1/embeddings"
+# model = "nomic-embed-text"
+# api_key_env = "OPENAI_API_KEY"
+# batch = 32
+
+# Optional machine-generated summaries (`meowlaw summarise`). Replaces the
+# placeholder summary (opening text) of rulings, cases, guidance and books
+# that have no supplied summary. Each is labelled "machine-generated (<model>),
+# not reviewed". Supplied summaries are never replaced.
+# [summaries]
+# url = "http://localhost:11434/v1/chat/completions"   # any OpenAI-compatible chat endpoint
+# model = "llama3.1"
+# api_key_env = "OPENAI_API_KEY"   # only if the endpoint needs a key
+# words = 200
+# max_input_chars = 24000
+# auto = false                     # also run after `meowlaw sync` and ingest-page uploads
+
+# Optional per-corpus access control. See docs/access.md.
+# [access]
+# default = "public"
+# anonymous = ["public"]
+# [access.corpora]
+# "handbook-*" = "internal"
+# [[access.tokens]]
+# name = "staff"
+# env = "MEOWLAW_TOKEN_STAFF"
+# tags = ["public", "internal"]

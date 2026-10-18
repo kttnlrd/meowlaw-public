@@ -1,0 +1,121 @@
+# Canada (federal, English). STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in Canada before it is relied on.
+# Covers federal statutes as published on Justice Laws and the neutral
+# citations of the Supreme Court of Canada and the federal courts. Provincial
+# courts, provincial statutes and French-language identifiers (other than
+# CSC) are not covered yet.
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "ca"
+name = "Canada (federal, starter)"
+description = "Canadian federal drafting (PART I.1, DIVISION E.1, SUBDIVISION A.1, decimal sections 47.1), R.S.C./S.C. chapter citations, SCC/FCA/FC/TCC neutral citations, S.C.R."
+extends = "generic"
+language = "en-CA"
+
+# Sections 2, 47.1, 120.31; Parts I, I.01, II.1 (Roman with decimal suffix).
+# Source: https://laws-lois.justice.gc.ca/eng/acts/I-3.3/ (Income Tax Act, headings and section list)
+number = '(?:[0-9]+(?:\.[0-9]+)*|[IVXLC]+(?:\.[0-9]+)*\b)'
+
+# ---------------------------------------------------------------------------
+# Structure. Justice Laws prints PART I, DIVISION A, SUBDIVISION A.1.
+# Source: https://laws-lois.justice.gc.ca/eng/acts/I-3.3/
+# ---------------------------------------------------------------------------
+
+[[levels]]
+label = "Part"
+abbrev = "pt"
+rank = 30
+pattern = '^(?i:part)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Division"
+abbrev = "div"
+rank = 40
+pattern = '^(?i:division)\s+(?P<num>[A-Z](?:\.[0-9]+)?)\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subdivision"
+abbrev = "sdiv"
+rank = 45
+pattern = '^(?i:subdivision)\s+(?P<num>[A-Z](?:\.[0-9]+)?)\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Schedule"
+abbrev = "sch"
+rank = 30
+kind = "schedule"
+pattern = '^(?i:schedule)\s+(?P<num>{NUM}|[A-Z])?\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?:(?i:section)\s+)?(?P<num>[0-9]+(?:\.[0-9]+)*)\.?\s+(?P<title>[A-Z][^\n]{1,200})$'
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Neutral citations: 2019 SCC 65, 2017 FCA 132, 2015 FC 960, 2019 TCC 76,
+# with an optional paragraph pinpoint ("para 21" / "at para 21").
+# Structure (year, identifier, ordinal, no brackets) and SCC/CSC:
+#   https://lexum.com/ccc-ccr/neutr/neutr.jur.sum_en.html (Canadian Citation Committee standard)
+# FC/FCA/SCC as printed by the Supreme Court of Canada (docket 37748):
+#   https://www.scc-csc.ca/cases-dossiers/search-recherche/37748/
+# TCC/FCA on the SCC's own judgment (Deans Knight, 2023 SCC 16):
+#   https://decisions.scc-csc.ca/scc-csc/scc-csc/en/19939/1/document.do
+[[citations]]
+name = "ca_neutral"
+target = { type = "case" }
+pattern = '\b(?P<cite>[12][0-9]{3}\s+(?:SCC|CSC|FCA|FC|TCC)\s+[0-9]{1,5})\b(?:\s*,?\s*(?:at\s+)?(?:paras?\.?|¶)\s*(?P<pin>[0-9]{1,4}))?'
+
+# Supreme Court Reports: [2008] 1 S.C.R. 190 (SCC website); CanLII prints [2019] 4 SCR 653.
+# Source: https://www.scc-csc.ca/cases-dossiers/search-recherche/37748/
+[[citations]]
+name = "ca_scr"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+[0-9]\s+S\.?C\.?R\.?\s+[0-9]{1,5})'
+
+# Statute chapter citations as printed on Justice Laws:
+#   Income Tax Act (R.S.C., 1985, c. 1 (5th Supp.))  https://laws-lois.justice.gc.ca/eng/acts/I-3.3/
+#   Immigration and Refugee Protection Act (S.C. 2001, c. 27)  https://laws-lois.justice.gc.ca/eng/acts/I-2.5/
+[[citations]]
+name = "ca_statute_chapter"
+target = { type = "corpus" }
+pattern = '\b(?P<corpus>(?:R\.S\.C\.,?|S\.C\.)\s+[12][0-9]{3},\s+c\.\s+[0-9]+(?:\s+\([0-9]+(?:st|nd|rd|th)\s+Supp\.\))?)'
+
+# "subsection 2(1)", "paragraph 3(a)": pinpoints resolve to the section.
+# Source: https://laws-lois.justice.gc.ca/eng/acts/I-3.3/page-1.html (s 2(3): "subsection 2(1)")
+[[citations]]
+name = "ca_pinpoint"
+target = { type = "provision", label = "Section" }
+pattern = '\b(?i:subsections?|paragraphs?|subparagraphs?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z.]{1,6}\))+(?:\s*(?:,|and|or)\s*{NUM}(?:\([0-9A-Za-z.]{1,6}\))+)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+Act))?'
+
+# ---------------------------------------------------------------------------
+# CanLII. URL pattern confirmed from real case pages:
+#   https://www.canlii.org/en/ca/scc/doc/2019/2019scc65/2019scc65.html
+#   https://www.canlii.org/en/ca/scc/doc/2023/2023scc16/2023scc16.html
+#   https://www.canlii.org/en/ca/fca/doc/2023/2023fca201/2023fca201.html
+#   https://www.canlii.org/en/ca/fca/doc/2016/2016fca216/2016fca216.html
+#   https://www.canlii.org/en/ca/tcc/doc/2024/2024tcc114/2024tcc114.html
+#   https://www.canlii.org/en/ca/tcc/doc/2013/2013tcc380/2013tcc380.html
+# ---------------------------------------------------------------------------
+[[links]]
+label = "CanLII"
+citation = '^(?P<year>[12][0-9]{3})\s+(?P<court>SCC|FCA|TCC)\s+(?P<num>[0-9]+)$'
+url = "https://www.canlii.org/en/ca/{court_lower}/doc/{year}/{year}{court_lower}{num}/{year}{court_lower}{num}.html"
+
+# Federal Court decisions sit under /fct/ but the file name uses "fc":
+#   https://www.canlii.org/en/ca/fct/doc/2013/2013fc6/2013fc6.html
+#   https://www.canlii.org/en/ca/fct/doc/2012/2012fc799/2012fc799.pdf
+[[links]]
+label = "CanLII"
+citation = '^(?P<year>[12][0-9]{3})\s+FC\s+(?P<num>[0-9]+)$'
+url = "https://www.canlii.org/en/ca/fct/doc/{year}/{year}fc{num}/{year}fc{num}.html"
+
+# Add short titles for the Acts you ingest, e.g.
+#   "ITA" = "income-tax-act"
+[corpus_aliases]

@@ -1,0 +1,79 @@
+# Germany. STARTER PROFILE: structure and citation forms only, written to show
+# that profiles are language-neutral. Have it reviewed by a German-qualified
+# lawyer before relying on definition extraction.
+
+id = "de"
+name = "Deutschland (starter)"
+description = "German statute structure (Buch, Abschnitt, Titel, §, Artikel) and citation forms (§ 823 Abs. 1 BGB, Art. 1 GG)."
+language = "de"
+
+number = '(?:[0-9]+[a-z]{0,2}\b)'
+
+[[levels]]
+label = "Buch"
+abbrev = "buch"
+rank = 10
+pattern = '^(?P<num>[0-9]+)\.\s+Buch\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Abschnitt"
+abbrev = "abschn"
+rank = 20
+pattern = '^(?:(?P<num>[0-9]+)\.\s+)?Abschnitt\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Titel"
+abbrev = "titel"
+rank = 30
+pattern = '^(?:(?P<num>[0-9]+)\.\s+)?Titel\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Artikel"
+abbrev = "art"
+rank = 50
+kind = "provision"
+pattern = '^(?:Artikel|Art\.)\s+(?P<num>{NUM})\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Paragraph"
+abbrev = "p"
+rank = 50
+kind = "provision"
+pattern = '^§\s*(?P<num>{NUM})\s*(?P<title>.*)$'
+
+# § 823 Abs. 1 BGB ; §§ 104 bis 113 BGB
+[[citations]]
+name = "paragraph"
+target = { type = "provision", label = "Paragraph" }
+pattern = '§§?\s*(?P<nums>{NUM}(?:\s*(?:,|und|bis)\s*{NUM})*)(?:\s+Abs\.\s*[0-9]+[a-z]?)?(?:\s+S(?:atz|\.)\s*[0-9]+)?(?:\s+Nr\.\s*[0-9]+[a-z]?)?(?:\s+(?P<corpus>[A-ZÄÖÜ][A-Za-zÄÖÜäöüß]{0,12}G[A-Za-z]{0,3}|[A-Z]{2,6}))?'
+
+# Art. 1 Abs. 1 GG
+[[citations]]
+name = "artikel"
+target = { type = "provision", label = "Artikel" }
+pattern = '\bArt(?:ikel|\.)\s*(?P<nums>{NUM}(?:\s*(?:,|und|bis)\s*{NUM})*)(?:\s+Abs\.\s*[0-9]+[a-z]?)?(?:\s+S(?:atz|\.)\s*[0-9]+)?(?:\s+(?P<corpus>[A-Z][A-Za-z]{1,10}))?'
+
+[[citations]]
+name = "ecli"
+target = { type = "case" }
+pattern = '\b(?P<cite>ECLI:[A-Z]{2}:[A-Z0-9.]{1,7}:[0-9]{4}:[A-Za-z0-9.]{1,25})'
+
+[definitions]
+section_titles = '(?i)\bbegriffsbestimmung(?:en)?\b'
+max_term_words = 5
+
+[[definitions.patterns]]
+name = "quoted"
+pattern = '[„"](?P<term>[^“"\n]{1,80})[“"]\s+(?:ist|sind|bezeichnet|bedeutet)\b(?P<rest>.*)'
+
+[[definitions.patterns]]
+name = "im_sinne"
+definitions_section_only = true
+pattern = '^\s*(?:[0-9]+\.\s*)?(?P<term>[A-ZÄÖÜ][\wäöüß\-]+(?:\s+[\wäöüß\-]+){0,3})\s+im Sinne dieses Gesetzes\s+(?:ist|sind)\b(?P<rest>.*)'
+
+[label_aliases]
+"§" = "Paragraph"
+"§§" = "Paragraph"
+"art" = "Artikel"
+
+[corpus_aliases]

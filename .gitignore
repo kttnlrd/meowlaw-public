@@ -1,0 +1,6 @@
+/target
+/data
+meowlaw.toml
+*.db
+*.db-wal
+*.db-shm

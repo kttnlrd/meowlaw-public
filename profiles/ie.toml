@@ -1,0 +1,59 @@
+# Ireland. STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in Ireland before it is relied on.
+# Neutral citations and report series were checked against judgments on
+# courts.ie; statute and S.I. forms against the Irish Statute Book.
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "ie"
+name = "Ireland (starter)"
+description = "Irish neutral citations (IESC, IECA, IEHC), Irish Reports and ILRM, S.I. numbers, Acts cited with or without a comma before the year."
+extends = "generic"
+language = "en-IE"
+
+# ---------------------------------------------------------------------------
+# Structure. The Irish Statute Book prints PART 1, CHAPTER 1, then "1." sections.
+# Source: https://www.irishstatutebook.ie/eli/1997/act/39/enacted/en/html (Taxes Consolidation Act 1997)
+# The generic levels (Part, Chapter, bare-number Section) already cover this.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Neutral citations: [2024] IESC 34, [2020] IECA 213, [2025] IEHC 661.
+# Sources: https://www.courts.ie/view/Judgments/a36588c2-1cbf-4a68-aa27-7297e39b5fb7/be9e0a96-68ff-4589-8534-7aeb996ea256/2024_IESC_34_(O'Donnell%20CJ).pdf/pdf
+#          https://www2.courts.ie/acc/alfresco/40c9d7a5-4648-451b-96c5-9e396b778769/2020_IECA_213.docx/file
+#          https://ww2.courts.ie/view/Judgments/65533224-470f-41a0-9a97-c0aebda548d2/78eddec0-819d-47f8-ac84-fcec6405d1fc/2025_IEHC_661.pdf/pdf
+[[citations]]
+name = "ie_neutral"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:IESC|IECA|IEHC)\s+[0-9]{1,5})'
+
+# Irish Reports and Irish Law Reports Monthly: [2012] 2 IR 1, [2021] 2 ILRM 305.
+# Source: https://www2.courts.ie/acc/alfresco/5025c382-b26b-4d92-91ab-f3d36abfa76c/2023_IECA_19.pdf/pdf
+[[citations]]
+name = "ie_report"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+[0-9]\s+(?:IR|ILRM)\s+[0-9]{1,5})'
+
+# Statutory instruments: "S.I. No. 123/2020", "S.I. No. 298 of 2002", "S.I. No 141 of 2011".
+# Source: https://www.irishstatutebook.ie/eli/2020/si/123/made/en/html
+[[citations]]
+name = "ie_si"
+target = { type = "corpus" }
+pattern = '\b(?P<corpus>S\.I\.\s+No\.?\s+[0-9]{1,4}(?:/|\s+of\s+)[12][0-9]{3})'
+
+# Older Acts carry a comma before the year ("Age of Majority Act, 1985");
+# the generic `section` pattern handles "s. 18 of the Interpretation Act 2005".
+# Sources: https://www.irishstatutebook.ie/eli/1997/act/39/enacted/en/html (s 7 heading)
+#          https://www2.courts.ie/acc/alfresco/5025c382-b26b-4d92-91ab-f3d36abfa76c/2023_IECA_19.pdf/pdf
+[[citations]]
+name = "ie_section_of_act_comma"
+target = { type = "provision", label = "Section" }
+pattern = '\b(?:[Ss]ections?|ss?\.)\s*(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)\s+of\s+the\s+(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+(?:(?:and|of|for|the|in|on|to)\s+)?){1,10}Acts?,\s+[12][0-9]{3})'
+
+# Add short titles for the Acts you ingest, e.g.
+#   "TCA 1997" = "taxes-consolidation-act-1997"
+[corpus_aliases]

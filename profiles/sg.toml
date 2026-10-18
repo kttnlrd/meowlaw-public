@@ -1,0 +1,74 @@
+# Singapore. STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in Singapore before it is relied on.
+# Case citation forms and eLitigation links were checked against judgments
+# published on eLitigation (the Singapore courts' official judgment site).
+# Statute structure is inherited from `generic`; Singapore Statutes Online
+# could not be checked for this starter.
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "sg"
+name = "Singapore (starter)"
+description = "Singapore neutral citations (SGCA, SGCA(I), SGHC, SGHC(A), SGHC(I), SGHCR, SGHCF), SLR and SLR(R), Acts cited with the 2020 Revised Edition, eLitigation links."
+extends = "generic"
+language = "en-SG"
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Neutral citations with "at [26]" pinpoint. Each identifier seen on eLitigation:
+#   https://www.elitigation.sg/gd/s/2020_SGCA_1      [2020] SGCA 1
+#   https://www.elitigation.sg/gd/s/2020_SGCAI_1     [2020] SGCA(I) 1
+#   https://www.elitigation.sg/gd/s/2023_SGHC_10     [2023] SGHC 10
+#   https://www.elitigation.sg/gd/s/2022_SGHCA_5     [2022] SGHC(A) 5
+#   https://www.elitigation.sg/gd/s/2021_SGHCI_3     [2021] SGHC(I) 3
+#   https://www.elitigation.sg/gd/s/2019_SGHCR_1     [2019] SGHCR 1
+#   https://www.elitigation.sg/gd/s/2023_SGHCF_1     [2023] SGHCF 1
+[[citations]]
+name = "sg_neutral"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:SGCA\(I\)|SGHC\(A\)|SGHC\(I\)|SGCA|SGHCR|SGHCF|SGHC)\s+[0-9]{1,4})(?:\s+at\s+\[(?P<pin>[0-9]{1,4})\])?'
+
+# Singapore Law Reports and the reissue: [2019] 5 SLR 130, [1994] 3 SLR(R) 649.
+# Source: https://www.elitigation.sg/gd/s/2023_SGHC_10 and https://www.elitigation.sg/gd/s/2019_SGHCR_1
+[[citations]]
+name = "sg_slr"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+[0-9]{1,2}\s+SLR(?:\(R\))?\s+[0-9]{1,5})(?:\s+at\s+\[(?P<pin>[0-9]{1,4})\])?'
+
+# "s 124(1) of the Evidence Act 1893 (2020 Rev Ed)".
+# Source: https://www.elitigation.sg/gd/s/2023_SGHC_10
+[[citations]]
+name = "sg_section_rev_ed"
+target = { type = "provision", label = "Section" }
+pattern = '\b(?:[Ss]ections?|ss?)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)\s+of\s+the\s+(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+(?:(?:and|of|for|the|in|on|to)\s+)?){1,10}Act\s+[0-9]{4})\s+\([12][0-9]{3}\s+Rev\s+Ed\)'
+
+# ---------------------------------------------------------------------------
+# eLitigation. URL is /gd/s/{year}_{identifier}_{number}, with brackets
+# dropped from SGHC(A), SGHC(I) and SGCA(I). Confirmed on the seven pages above.
+# ---------------------------------------------------------------------------
+[[links]]
+label = "eLitigation"
+citation = '^\[(?P<year>[12][0-9]{3})\]\s+(?P<court>SGCA|SGHC|SGHCR|SGHCF)\s+(?P<num>[0-9]+)$'
+url = "https://www.elitigation.sg/gd/s/{year}_{court}_{num}"
+
+[[links]]
+label = "eLitigation"
+citation = '^\[(?P<year>[12][0-9]{3})\]\s+SGHC\(A\)\s+(?P<num>[0-9]+)$'
+url = "https://www.elitigation.sg/gd/s/{year}_SGHCA_{num}"
+
+[[links]]
+label = "eLitigation"
+citation = '^\[(?P<year>[12][0-9]{3})\]\s+SGHC\(I\)\s+(?P<num>[0-9]+)$'
+url = "https://www.elitigation.sg/gd/s/{year}_SGHCI_{num}"
+
+[[links]]
+label = "eLitigation"
+citation = '^\[(?P<year>[12][0-9]{3})\]\s+SGCA\(I\)\s+(?P<num>[0-9]+)$'
+url = "https://www.elitigation.sg/gd/s/{year}_SGCAI_{num}"
+
+# Add short titles for the Acts you ingest, e.g.
+#   "EA" = "evidence-act-1893"
+[corpus_aliases]

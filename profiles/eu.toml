@@ -1,0 +1,62 @@
+# European Union: Treaties, Regulations, Directives, CJEU case law.
+#
+# In EU acts "Section" is a grouping inside a Chapter and Articles carry the
+# operative text, so the structure differs from common-law drafting.
+
+id = "eu"
+name = "European Union"
+description = "EU act structure (Title > Chapter > Section > Article), Regulation/Directive identifiers, CJEU case numbers and ECLI."
+extends = "generic"
+language = "en"
+
+jurisdiction_tags = ["EU"]
+
+[[levels]]
+label = "Title"
+abbrev = "tt"
+rank = 10
+pattern = '^(?i:title)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Chapter"
+abbrev = "ch"
+rank = 20
+pattern = '^(?i:chapter)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "sec"
+rank = 30
+pattern = '^(?i:section)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Annex"
+abbrev = "anx"
+rank = 20
+kind = "schedule"
+pattern = '^(?i:annex)\s+(?P<num>{NUM}|[A-Z])?\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Article"
+abbrev = "art"
+rank = 50
+kind = "provision"
+pattern = '^(?i:article)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+# Article 6(1)(a) of Regulation (EU) 2016/679
+[[citations]]
+name = "eu_article"
+target = { type = "provision", label = "Article" }
+pattern = '\b(?:Articles?|Arts?\.)\s*(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+(?:of|of the)\s+(?P<corpus>(?:Regulation|Directive|Decision)\s+(?:\((?:EU|EC|EEC|Euratom)\)\s+)?(?:No\s+)?[0-9]{1,4}/[0-9]{1,4}(?:/(?:EU|EC|EEC|Euratom))?|TFEU|TEU|the Charter))?'
+
+[[citations]]
+name = "eu_act"
+target = { type = "corpus" }
+pattern = '\b(?P<corpus>(?:Regulation|Directive|Decision)\s+(?:\((?:EU|EC|EEC|Euratom)\)\s+)?(?:No\s+)?[0-9]{1,4}/[0-9]{1,4}(?:/(?:EU|EC|EEC|Euratom))?)'
+
+[[citations]]
+name = "cjeu_case"
+target = { type = "case" }
+pattern = '\b(?P<cite>(?:Case|Joined Cases)\s+[CTF]-[0-9]{1,4}/[0-9]{2}(?:\s+P)?)'
+
+[corpus_aliases]

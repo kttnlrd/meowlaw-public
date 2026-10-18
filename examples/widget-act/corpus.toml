@@ -1,0 +1,9 @@
+id = "widget-act"
+title = "Widget Act 2024"
+kind = "legislation"
+jurisdiction = "XX"
+profile = "generic"
+aliases = ["WA 2024", "the Widget Act"]
+as_at = "2024-07-01"
+licence = "Fictional example text, CC0"
+files = ["01-preliminary.md", "02-dealing.md"]

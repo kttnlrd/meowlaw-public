@@ -1,0 +1,41 @@
+name: Feature request
+description: A capability MeowLaw should have
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you are trying to do and where MeowLaw gets in the way.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      description: The behaviour you want. Sketches, config fragments and citations are welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Ingest and formats
+        - Extraction, citations, definitions
+        - Search and ranking
+        - Graph and related sources
+        - Web UI
+        - REST API
+        - MCP server
+        - Profiles for a jurisdiction
+        - Operations, Docker, deployment
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What you tried instead, and why it did not fit.
+    validations:
+      required: false

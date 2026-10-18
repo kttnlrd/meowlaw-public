@@ -1,0 +1,103 @@
+# New Zealand. STARTER PROFILE.
+#
+# Needs review by a lawyer qualified in New Zealand before it is relied on.
+# Citation forms follow the New Zealand Law Style Guide (NZ Law Foundation),
+# which the senior courts follow. Section numbers in the Income Tax Acts use
+# the letter-pair form (s CB 1, s YA 1).
+#
+# Extends `generic`; only the differences are listed here.
+
+id = "nz"
+name = "New Zealand (starter)"
+description = "NZ drafting (Part C, subpart CB, s CB 1 alongside plain section numbers), NZ Law Style Guide case citations: NZSC/NZCA/NZHC/NZDC neutral citations, NZLR and other NZ series."
+extends = "generic"
+language = "en-NZ"
+
+# "CB 1", "CE 10" (Income Tax Acts) or "36", "2A".
+# Source: https://lawfoundation.org.nz/style-guide/nzlsg_12.html (rule 4.1.4: "Income Tax Act 2004, s CE 10")
+# and https://www.legislation.govt.nz/act/public/2007/0097/4.0/DLM1512399.html ("CB 1 Amounts derived from business")
+number = '(?:[A-Z]{2}\s[0-9]+[A-Z]{0,3}|[0-9]+[A-Z]{0,3}|[IVXLC]+\b)'
+
+# ---------------------------------------------------------------------------
+# Structure. Income Tax Act 2007: Part C > Subpart CB > CB 1.
+# Source: https://www.legislation.govt.nz/act/public/2007/0097/795.0/DLM1512397.html
+#   ("Subpart CB—Income from business or trade-like activities")
+# ---------------------------------------------------------------------------
+
+[[levels]]
+label = "Part"
+abbrev = "pt"
+rank = 30
+pattern = '^(?i:part)\s+(?P<num>[A-Z]|[0-9]+[A-Z]?)\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subpart"
+abbrev = "spt"
+rank = 40
+pattern = '^(?i:subpart)\s+(?P<num>[A-Z]{2}|[0-9]+[A-Z]?)\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Schedule"
+abbrev = "sch"
+rank = 30
+kind = "schedule"
+pattern = '^(?i:schedule)\s+(?P<num>[0-9]+[A-Z]?|[A-Z])?\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?:(?i:section)\s+)?(?P<num>[A-Z]{2}\s[0-9]+[A-Z]{0,3}|[0-9]+[A-Z]{0,3})\.?\s+(?P<title>[A-Z][^\n]{1,200})$'
+
+# ---------------------------------------------------------------------------
+# Citations.
+# ---------------------------------------------------------------------------
+
+# Neutral citations of NZ courts, with "at [70]" pinpoint.
+# Source: https://lawfoundation.org.nz/style-guide2019/chapter-pt.3.3.html (rule 3.3.3(b), court table:
+#   NZSC, UKPC, NZCA, NZHC, NZDC, NZACC, NZEmpC, NZEnvC, NZFC, NZYC)
+# Pinpoint "at [70]": https://lawfoundation.org.nz/style-guide/nzlsg_8.html (rule 3.3)
+# Tribunal identifiers (NZHRRT, NZTRA, ...) are matched by generic `neutral_citation`.
+[[citations]]
+name = "nz_neutral"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:NZSC|NZCA|NZHC|NZDC|NZACC|NZEmpC|NZEnvC|NZFC|NZYC|UKPC)\s+[0-9]{1,6})(?:\s+at\s+\[(?P<pin>[0-9]{1,4})\])?'
+
+# Tribunals that put the registry between identifier and number:
+# "[2011] NZERA Auckland 407", "[2010] NZTT Wellington 904", "[2011] NZWHT Wellington 26".
+# Source: https://lawfoundation.org.nz/style-guide/nzlsg_8.html (rule 3.3.3(c))
+[[citations]]
+name = "nz_neutral_registry"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:NZERA|NZTT|NZWHT)\s+[A-Z][a-z]+\s+[0-9]{1,6})'
+
+# Reports: [2009] 1 NZLR 1, [1966] NZLR 187, [2007] NZAR 722, [2006] NZFLR 705,
+# (2007) 18 PRNZ 757, (2004) 20 CRNZ 847, (2006) 26 FRNZ 707, (1915) 17 GLR 505.
+# Source: https://lawfoundation.org.nz/style-guide/nzlsg_7.html (rule 3.2 examples)
+[[citations]]
+name = "nz_report"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:[0-9]\s+)?NZLR\s+[0-9]{1,5}|\[[12][0-9]{3}\]\s+(?:NZAR|NZFLR)\s+[0-9]{1,5}|\([12][0-9]{3}\)\s+[0-9]{1,3}\s+(?:PRNZ|CRNZ|FRNZ|GLR)\s+[0-9]{1,5})(?:\s+\([A-Z]{2,3}\))?(?:\s+at\s+\[(?P<pin>[0-9]{1,4})\])?'
+
+# Footnote form: "Crimes Act 1961, s 59", "Income Tax Act 2004, s CE 10".
+# Source: https://lawfoundation.org.nz/style-guide/nzlsg_12.html (rules 4.1.1, 4.1.4)
+[[citations]]
+name = "nz_act_then_section"
+target = { type = "provision", label = "Section" }
+pattern = '(?P<corpus>(?:[A-Z][\w’\x27()\-]*\s+(?:(?:and|of|for|the|in|on|to)\s+)?){1,10}Act\s+[0-9]{4})(?:\s+\((?:NZ|UK)\))?,\s+ss?\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)'
+
+# Abbreviations from rule 4.1.1(d): https://lawfoundation.org.nz/style-guide/nzlsg_12.html
+[label_aliases]
+"subss" = "Subsection"
+"para" = "Paragraph"
+"paras" = "Paragraph"
+"sch" = "Schedule"
+"schs" = "Schedule"
+"pt" = "Part"
+"pts" = "Part"
+"cls" = "Clause"
+
+# Add short titles for the Acts you ingest, e.g.
+#   "ITA 2007" = "income-tax-act-2007"
+[corpus_aliases]

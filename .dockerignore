@@ -1,0 +1,9 @@
+# The image builds from source; local build output and data never belong in
+# the build context.
+target/
+data/
+.git/
+*.db
+*.db-wal
+*.db-shm
+meowlaw.toml

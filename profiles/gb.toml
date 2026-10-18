@@ -1,0 +1,21 @@
+# United Kingdom (UK Public General Acts, Statutory Instruments, law reports).
+
+id = "gb"
+name = "United Kingdom"
+description = "UK drafting and citation: section/Part/Schedule structure, neutral citations, Law Reports and WLR/All ER series."
+extends = "generic"
+language = "en-GB"
+
+jurisdiction_tags = ["UK"]
+
+[[citations]]
+name = "gb_report"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+(?:[0-9]{1,2}\s+)?(?:AC|QB|KB|Ch|Fam|WLR|All ER|BCLC|BCC|STC|ICR|IRLR|Cr App R)\s+[0-9]{1,5})'
+
+[[citations]]
+name = "statutory_instrument"
+target = { type = "corpus" }
+pattern = '\b(?P<corpus>S\.?I\.?\s+[12][0-9]{3}/[0-9]{1,5})'
+
+[corpus_aliases]

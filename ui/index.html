@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MeowLaw</title>
+  <script>
+    // Apply saved appearance before first paint so the page never flashes.
+    (function () {
+      try {
+        var p = JSON.parse(localStorage.getItem("meowlaw-prefs") || "{}");
+        var d = document.documentElement;
+        var t = p.theme || "light";
+        if (t === "system") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        d.dataset.theme = t;
+        if (p.accent) d.style.setProperty("--primary", p.accent);
+        if (p.size === "large") d.dataset.size = "large";
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="icon" href="/brand/favicon">
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="app">
+    <nav id="sidebar" class="sidebar" aria-label="Sources">
+      <div class="sb-head">
+        <a class="brand" href="#/">
+          <img id="brand-logo" alt="" hidden>
+          <span id="brand-name">MeowLaw</span>
+        </a>
+        <button id="drawer-close" class="iconbtn iconbtn--bare sb-close" type="button" data-i18n-label="close" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <button id="source-pill" class="source-pill" type="button" data-i18n-label="sources">
+        <span id="pill-badge" class="badge badge--kind" hidden></span>
+        <span id="pill-title" class="source-pill__title"></span>
+        <svg class="source-pill__chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      <div class="sb-body">
+        <div id="pins" class="pins" hidden></div>
+        <div id="corpora" class="sources-card"></div>
+        <input id="tree-filter" class="tree-filter" type="search" data-i18n-ph="filter_tree" data-i18n-label="filter_tree" hidden>
+        <div id="tree" class="tree" role="tree" hidden></div>
+      </div>
+
+      <div class="sb-foot">
+        <button id="search-btn" class="search-btn" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span data-i18n="search">Search</span>
+          <kbd>/</kbd>
+        </button>
+        <div class="sb-tools">
+          <button id="settings-btn" class="iconbtn" type="button" data-i18n-label="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+          <a id="admin-link" class="iconbtn" href="/admin.html" data-i18n-label="admin_link" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div id="scrim" class="scrim" hidden></div>
+
+    <div class="content">
+      <button id="drawer-toggle" class="iconbtn drawer-toggle" type="button" data-i18n-label="sources" aria-controls="sidebar" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <main id="main" class="main" tabindex="-1"></main>
+      <aside id="aside" class="aside" aria-label="Related"></aside>
+    </div>
+  </div>
+
+  <div id="popover" class="popover" role="tooltip" hidden></div>
+
+  <div id="settings" class="modal" hidden>
+    <div class="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="settings__head">
+        <h1 id="settings-title" data-i18n="settings">Settings</h1>
+        <button id="settings-close" class="iconbtn" type="button" data-i18n-label="close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <section class="set-card">
+        <div class="set-card__head">
+          <div><h2 data-i18n="settings_appearance">Appearance</h2><p class="set-desc" data-i18n="settings_appearance_hint">Make the reader yours. Saved in this browser.</p></div>
+          <div class="seg" role="group" data-i18n-label="theme" id="theme-seg">
+            <button type="button" data-theme-choice="system" data-i18n="theme_system">System</button>
+            <button type="button" data-theme-choice="dark" data-i18n="theme_dark">Dark</button>
+            <button type="button" data-theme-choice="light" data-i18n="theme_light">Light</button>
+          </div>
+        </div>
+        <div class="set-grid">
+          <div class="set-field">
+            <span class="set-label" data-i18n="accent">Accent</span>
+            <label class="swatch-btn"><span id="accent-swatch" class="swatch"></span><span id="accent-hex" class="mono"></span><input id="accent-input" type="color" data-i18n-label="accent"></label>
+            <div id="accent-presets" class="presets" role="group"></div>
+          </div>
+          <div class="set-field">
+            <span class="set-label" data-i18n="text_size">Text size</span>
+            <div class="seg seg--sm" role="group" id="size-seg">
+              <button type="button" data-size-choice="normal" data-i18n="size_normal">Normal</button>
+              <button type="button" data-size-choice="large" data-i18n="size_large">Large</button>
+            </div>
+          </div>
+        </div>
+        <div class="set-foot">
+          <p class="set-preview"><span data-i18n="preview">Preview:</span> You can deduct a loss or outgoing to the extent that it is incurred in gaining your assessable income (<span class="mono preview-cite">s 8-1 ITAA 1997</span>).</p>
+          <button id="prefs-reset" class="btn" type="button" data-i18n="reset_defaults">Reset to defaults</button>
+        </div>
+      </section>
+
+      <section class="set-card">
+        <div class="set-card__head">
+          <div><h2 data-i18n="access">Access</h2><p class="set-desc" id="access-hint"></p></div>
+          <button id="token-button" class="btn" type="button"></button>
+        </div>
+      </section>
+
+      <section class="set-card">
+        <div class="set-card__head">
+          <div><h2 data-i18n="connect_ai">Connect an AI client</h2><p class="set-desc" data-i18n="connect_ai_hint">Claude Desktop, Claude Code, ChatGPT or any MCP client can read these sources.</p></div>
+        </div>
+        <div class="set-field">
+          <span class="set-label" data-i18n="mcp_url">MCP endpoint</span>
+          <div class="copy-row"><code id="mcp-url" class="code-block"></code><button class="btn btn--sm" type="button" data-copy="#mcp-url" data-i18n="copy">Copy</button></div>
+        </div>
+        <div class="set-field">
+          <span class="set-label" data-i18n="claude_code">Claude Code</span>
+          <div class="copy-row"><code id="mcp-code" class="code-block"></code><button class="btn btn--sm" type="button" data-copy="#mcp-code" data-i18n="copy">Copy</button></div>
+        </div>
+        <div class="set-field">
+          <span class="set-label" data-i18n="claude_desktop">Claude Desktop (config JSON)</span>
+          <div class="copy-row"><pre id="mcp-json" class="code-block"></pre><button class="btn btn--sm" type="button" data-copy="#mcp-json" data-i18n="copy">Copy</button></div>
+        </div>
+        <p class="set-hint" id="mcp-note"></p>
+      </section>
+
+      <section class="set-card set-card--about">
+        <h2 data-i18n="about">About</h2>
+        <p class="set-desc" id="about-line"></p>
+        <p class="set-desc" id="brand-footer"></p>
+        <p class="set-hint"><kbd>/</kbd> <span data-i18n="kbd_search">focuses search</span> · <kbd>j</kbd> <kbd>k</kbd> <span data-i18n="kbd_next_prev">next and previous provision</span> · <kbd>?</kbd> <span data-i18n="kbd_help">opens this panel</span> · <kbd>Esc</kbd> <span data-i18n="kbd_close">closes panels</span></p>
+      </section>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

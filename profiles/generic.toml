@@ -1,0 +1,241 @@
+# Generic English-language profile. Every other English profile extends this.
+#
+# Patterns are Rust `regex` syntax. `{NUM}` expands to the profile's `number`
+# fragment (or the engine default: 8-1, 12A, 5.3.2, IV).
+# See docs/profiles.md for every field.
+
+id = "generic"
+name = "Generic (English)"
+description = "Common English-language structure, citation and definition conventions. Country neutral."
+language = "en"
+
+# ---------------------------------------------------------------------------
+# Structure. Matched against heading lines (Markdown headings, HTML h1-h6,
+# or plain-text lines). Lower rank = outer level. First match wins, so put
+# specific patterns before general ones.
+# ---------------------------------------------------------------------------
+
+[[levels]]
+label = "Book"
+abbrev = "bk"
+rank = 10
+pattern = '(?i)^book\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Title"
+abbrev = "tt"
+rank = 15
+pattern = '^(?:Title|TITLE)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Chapter"
+abbrev = "ch"
+rank = 20
+pattern = '(?i)^chapter\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Part"
+abbrev = "pt"
+rank = 30
+pattern = '(?i)^part\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Division"
+abbrev = "div"
+rank = 40
+pattern = '(?i)^division\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Subdivision"
+abbrev = "sdiv"
+rank = 45
+pattern = '(?i)^subdivision\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Schedule"
+abbrev = "sch"
+rank = 30
+kind = "schedule"
+pattern = '(?i)^(?:schedule|annex|appendix)\s+(?P<num>{NUM}|[A-Z])\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Article"
+abbrev = "art"
+rank = 50
+kind = "provision"
+pattern = '(?i)^(?:article|art\.)\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Rule"
+abbrev = "r"
+rank = 50
+kind = "provision"
+pattern = '(?i)^rule\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Regulation"
+abbrev = "reg"
+rank = 50
+kind = "provision"
+pattern = '(?i)^regulation\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Clause"
+abbrev = "cl"
+rank = 50
+kind = "provision"
+pattern = '(?i)^clause\s+(?P<num>{NUM})\b\s*(?P<title>.*)$'
+
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?:(?i:section|sec\.)\s+|§\s*)(?P<num>{NUM})\b\.?\s*(?P<title>.*)$'
+
+# A bare number followed by a capitalised title ("12 Application of Act").
+# Only reached when nothing above matched. Common in Commonwealth-style drafting.
+[[levels]]
+label = "Section"
+abbrev = "s"
+rank = 50
+kind = "provision"
+pattern = '^(?P<num>[0-9]+[A-Z]{0,3}(?:-[0-9]+[A-Z]{0,3})?)\.?\s+(?P<title>[A-Z][^.]{1,200})$'
+
+# ---------------------------------------------------------------------------
+# Citations. Groups: num | nums (a list), label, corpus, cite.
+# ---------------------------------------------------------------------------
+
+[[citations]]
+name = "section"
+target = { type = "provision", label = "Section" }
+pattern = '(?:\b(?i:sections?|secs?)(?:\.\s*|\s*)|\b(?i:ss?)(?:\.\s*|\s+)|§§?\s*)(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to|–|-)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+(?:Act|Code|Ordinance|Constitution|Regulations?|Rules)(?:\s+(?:of\s+)?[0-9]{4})?))?'
+
+[[citations]]
+name = "article"
+target = { type = "provision", label = "Article" }
+pattern = '\b(?:Articles?|Arts?\.)\s*(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to|–|-)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*))?'
+
+[[citations]]
+name = "rule"
+target = { type = "provision", label = "Rule" }
+pattern = '\b(?i:rules?|rr?\.)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)'
+
+[[citations]]
+name = "regulation"
+target = { type = "provision", label = "Regulation" }
+pattern = '\b(?i:regulations?|regs?\.)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)'
+
+[[citations]]
+name = "clause"
+target = { type = "provision", label = "Clause" }
+pattern = '\b(?i:clauses?|cll?\.)\s+(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to)\s*{NUM})*)'
+
+[[citations]]
+name = "container"
+target = { type = "provision" }
+pattern = '\b(?P<label>Chapter|Part|Division|Subdivision|Schedule|Title)\s+(?P<num>{NUM})\b(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+(?:Act|Code|Regulations?|Rules)(?:\s+[0-9]{4})?))?'
+
+[[citations]]
+name = "subsection"
+target = { type = "relative", label = "Subsection" }
+pattern = '\b(?i:subsections?|subs?\.?)\s*(?P<nums>\([0-9]+[A-Za-z]{0,2}\)(?:\s*(?:,|and|or|to)\s*\([0-9]+[A-Za-z]{0,2}\))*)'
+
+# European Case Law Identifier: a jurisdiction-neutral case ID.
+[[citations]]
+name = "ecli"
+target = { type = "case" }
+pattern = '\b(?P<cite>ECLI:[A-Z]{2}:[A-Z0-9.]{1,7}:[0-9]{4}:[A-Za-z0-9.]{1,25})'
+
+# Medium-neutral citations: [2024] HCA 1, [2020] UKSC 12, [2019] EWCA Civ 123, [2023] NZSC 5.
+[[citations]]
+name = "neutral_citation"
+target = { type = "case" }
+pattern = '(?P<cite>\[[12][0-9]{3}\]\s+[A-Z][A-Za-z]{1,9}[A-Z](?:\s+(?:Civ|Crim|Admin|Ch|Fam|Comm|Pat|QB|KB|TCC|IPEC|Costs))?\s+[0-9]{1,5})(?:\s+at\s+\[(?P<pin>[0-9]{1,4})\](?:[-–][0-9]{1,4}\]?)?)?'
+
+# "paragraph 30 of this Ruling", "paragraphs 12 to 14 of this judgment"
+[[citations]]
+name = "own_paragraph"
+target = { type = "provision" }
+pattern = '\b(?i:paragraphs?|paras?\.?)\s+(?P<nums>[0-9]{1,4}(?:\s*(?:,|and|to|–)\s*[0-9]{1,4})*)\s+of\s+(?P<corpus>this\s+(?i:Ruling|Determination|Guideline|Guide|Statement|judgment|decision|reasons|Handbook|Policy|Practice Note))'
+
+# ---------------------------------------------------------------------------
+# Definitions. Applied paragraph by paragraph. `term` group is required.
+# ---------------------------------------------------------------------------
+
+[definitions]
+section_titles = '(?i)\b(?:definitions?|interpretation|dictionary|meaning of|glossary|defined terms)\b'
+scope_phrase = '(?i)\bin this (?P<label>Act|Code|Part|Division|Subdivision|Chapter|Schedule|Title|Article|section|Regulation|Rule|instrument|Agreement|Handbook|Policy|Guide)\b'
+stop_terms = ["this", "it", "that", "which", "there", "such", "each", "any", "the", "a", "an", "he", "she", "they", "this section", "this act", "this part"]
+max_term_words = 8
+
+[[definitions.patterns]]
+name = "quoted_means"
+pattern = '^\s*(?:(?i:in this [a-z]+)\s*[,:]?\s+)?(?:\([a-z0-9]{1,4}\)\s*|[-*•]\s*|[0-9]{1,3}\.\s+)?(?:the\s+(?:term|expression|word)\s+)?[“"‘](?P<term>[^”"’\n]{1,120})[”"’]\s*(?:,[^,\n]{1,80},)?\s*,?\s+(?:means|shall mean|refers to|is defined as)\b(?P<rest>.*)'
+
+[[definitions.patterns]]
+name = "quoted_includes"
+pattern = '^\s*(?:(?i:in this [a-z]+)\s*[,:]?\s+)?(?:\([a-z0-9]{1,4}\)\s*|[-*•]\s*|[0-9]{1,3}\.\s+)?[“"‘](?P<term>[^”"’\n]{1,120})[”"’]\s*,?\s+(?:includes|does not include)\b(?P<rest>.*)'
+
+[[definitions.patterns]]
+name = "quoted_has_meaning"
+pattern = '^\s*(?:(?i:in this [a-z]+)\s*[,:]?\s+)?(?:\([a-z0-9]{1,4}\)\s*|[-*•]\s*|[0-9]{1,3}\.\s+)?[“"‘](?P<term>[^”"’\n]{1,120})[”"’]\s*,?\s+has the (?:same )?meaning\b(?P<rest>.*)'
+
+# "For the purposes of this title, the term “X” means" (anywhere in the paragraph).
+[[definitions.patterns]]
+name = "the_term_means"
+pattern = '\bthe (?:term|expression|word)s?\s+[“"‘](?P<term>[^”"’\n]{1,120})[”"’]\s*,?\s+(?:means|includes|has the (?:same )?meaning)\b(?P<rest>.*)'
+
+# Bold or italic Markdown terms: **term** means / ***term*** means / *term* means.
+[[definitions.patterns]]
+name = "emphasised_means"
+pattern = '^\s*(?:(?i:in this [a-z]+)\s*[,:]?\s+)?(?:\([a-z0-9]{1,4}\)\s*|[-•]\s*|[0-9]{1,3}\.\s+)?\*{1,3}(?P<term>[^*\n]{1,120}?)\*{1,3}\s*(?:,[^,\n]{1,80},)?\s*,?\s+(?:means|includes|has the (?:same )?meaning|refers to)\b(?P<rest>.*)'
+
+# Unquoted, only inside a definitions/interpretation provision.
+[[definitions.patterns]]
+name = "bare_means"
+definitions_section_only = true
+pattern = '^\s*(?:(?i:in this [a-z]+)\s*[,:]?\s+)?(?:\([a-z0-9]{1,4}\)\s*|[-•]\s*|[0-9]{1,3}\.\s+)?(?P<term>[A-Za-z][\w’\x27\-]*(?:\s+[\w’\x27\-]+){0,7}?)\s*,?\s+(?:means|has the (?:same )?meaning)\b(?P<rest>.*)'
+
+# Contracts, handbooks and policies: (the "Company"), (each a "Party").
+[[definitions.patterns]]
+name = "parenthetical"
+pattern = '\((?:the\s+|each\s+an?\s+|together\s+the\s+|hereinafter\s+)?[“"](?P<term>[A-Z][^”"\n]{0,60})[”"]\)'
+
+# ---------------------------------------------------------------------------
+# Judgments.
+# ---------------------------------------------------------------------------
+
+[cases]
+paragraph = '^\s*\[?(?P<num>[0-9]{1,4})\]?[.)]?\s+\S'
+
+# Table items: "item 3 of the table in section 12" cites section 12 pinned to
+# the row whose first cell is 3; "item 3 of this table" cites the citing
+# provision's own table. See docs/tables.md.
+[tables]
+item = '\b(?i:table\s+)?(?i:items?)\s+(?P<item>[0-9]{1,3}[A-Z]{0,3}(?:\.[0-9]{1,3}[A-Z]{0,2})?)\s+(?:of|in)\s+(?:the|this|that)\s+table\b'
+link = '\s+(?:in|at|of|to)\s+'
+
+[label_aliases]
+"s" = "Section"
+"ss" = "Section"
+"sec" = "Section"
+"secs" = "Section"
+"§" = "Section"
+"§§" = "Section"
+"sections" = "Section"
+"art" = "Article"
+"arts" = "Article"
+"articles" = "Article"
+"r" = "Rule"
+"rr" = "Rule"
+"rules" = "Rule"
+"reg" = "Regulation"
+"regs" = "Regulation"
+"regulations" = "Regulation"
+"cl" = "Clause"
+"cll" = "Clause"
+"clauses" = "Clause"
+"sub" = "Subsection"
+"subs" = "Subsection"
+"subsections" = "Subsection"
