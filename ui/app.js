@@ -53,7 +53,7 @@ const current = (seq) => seq === routeSeq;
 // ------------------------------------------------------------ preferences
 // Appearance lives in this browser only: theme, accent and text size.
 const ACCENT_PRESETS = ["#c6f432", "#ff7ac8", "#3fd6b8", "#ffb347", "#6aa8ff", "#a78bfa", "#f87171", "#f5f5f5"];
-const DEFAULT_PREFS = { theme: "light", accent: "", size: "normal" };
+const DEFAULT_PREFS = { theme: "dark", accent: "", size: "normal" };
 let PREFS = { ...DEFAULT_PREFS };
 function loadPrefs() {
   try { PREFS = { ...DEFAULT_PREFS, ...(JSON.parse(localStorage.getItem("meowlaw-prefs") || "{}") || {}) }; } catch (_) {}

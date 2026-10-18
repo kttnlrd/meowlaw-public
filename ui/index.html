@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MeowLaw</title>
+  <title>lawkitty: the law, pounced on</title>
   <script>
     // Apply saved appearance before first paint so the page never flashes.
     (function () {
       try {
         var p = JSON.parse(localStorage.getItem("meowlaw-prefs") || "{}");
         var d = document.documentElement;
-        var t = p.theme || "light";
+        var t = p.theme || "dark";
         if (t === "system") t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         d.dataset.theme = t;
         if (p.accent) d.style.setProperty("--primary", p.accent);
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="/theme.css">
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/lawkitty.css">
 </head>
 <body>
   <div class="app">
