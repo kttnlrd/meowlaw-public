@@ -1,7 +1,13 @@
 # Examples
 
-Every source here is **fictional**, written to exercise the parsers. None of it
-is real law.
+Most sources here are **fictional**, written to exercise the parsers.
+
+`au-tax/` is the exception: it commits real Australian material (ITAA 1997,
+ITAA 1936, TR 2018/5 and a summary of *Bendel* [2026] HCA 18) so that example
+runs without any external corpus. Those files are **real law and real
+commentary**, each under its own licence and attribution terms, recorded in
+[`au-tax/sources/SOURCES.md`](au-tax/sources/SOURCES.md). The AGPL does not
+cover them.
 
 ```sh
 meowlaw ingest examples/widget-act            # multi-file Act with corpus.toml

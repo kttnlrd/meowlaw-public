@@ -114,11 +114,8 @@ fn scan_document(xml: &str) -> Result<Scan, String> {
                         s.toc = true;
                     }
                 }
-                "fldChar" => {
-                    if attr(&e, "fldCharType").as_deref() == Some("begin") {
-                        s.fields += 1;
-                    }
-                }
+                "fldChar" if attr(&e, "fldCharType").as_deref() == Some("begin") => s.fields += 1,
+                "fldChar" => {}
                 "vanish" => {
                     let n = stack.len();
                     if n >= 2 && stack[n - 1] == "rPr" && stack[n - 2] == "r" {

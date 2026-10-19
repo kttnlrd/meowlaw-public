@@ -16,6 +16,11 @@ cargo test --workspace
 
 ## Licence of contributions
 
-The project is licensed under PolyForm Noncommercial 1.0.0 and the copyright
-holder also grants commercial licences. Contributions are accepted only under
-a contributor licence agreement that lets the copyright holder do both.
+The project is licensed under the GNU Affero General Public License v3.0 or
+later, and the copyright holder also offers commercial licences.
+
+By submitting a contribution you grant the copyright holder a perpetual,
+worldwide, royalty-free, irrevocable licence to use, reproduce, modify and
+distribute your contribution under the AGPL and under any commercial licence,
+and you confirm you have the right to grant it. Do not contribute third-party
+code or legal text you cannot license on those terms.

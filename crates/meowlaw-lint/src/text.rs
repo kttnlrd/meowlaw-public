@@ -374,17 +374,11 @@ pub(crate) fn check_text(cx: &mut Cx, lines: &Lines, raw: &str, rules: &TextRule
         for (col, c) in line.chars().enumerate() {
             match c {
                 '\0' => nul.hit(i),
-                '\t' => {
-                    if seen_text {
-                        tabs.hit(i)
-                    }
-                }
+                '\t' if seen_text => tabs.hit(i),
+                '\t' => {}
                 '\n' | '\r' | '\u{c}' => {}
-                '\u{feff}' => {
-                    if !(i == 0 && col == 0) {
-                        bom_mid.hit(i)
-                    }
-                }
+                '\u{feff}' if !(i == 0 && col == 0) => bom_mid.hit(i),
+                '\u{feff}' => {}
                 c if (c as u32) < 0x20 || ('\u{7f}'..='\u{9f}').contains(&c) => control.hit(i),
                 '\u{a0}' | '\u{2000}'..='\u{200a}' | '\u{202f}' | '\u{205f}' | '\u{3000}' => {
                     nbsp.hit(i)

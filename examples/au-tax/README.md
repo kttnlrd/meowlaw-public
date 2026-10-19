@@ -1,10 +1,10 @@
 # Example: ITAA 1997, ITAA 1936, Bendel, TR 2018/5
 
-Real Australian sources, converted from the LawKitty corpus. All four are
-committed in `sources/` so the example runs without the LawKitty data:
+Real Australian sources. All four are committed in `sources/` so the example
+runs without any external corpus:
 `itaa-1997.json` and `itaa-1936.json` (canonical JSON), `tr-2018-5.md`,
 `bendel-2026-hca-18.md`. `convert_lawkitty.py` shows how the Act files were
-made.
+made from a corpus tree laid out as `<act dir>/tree.json` plus `sections/`.
 
 | Source | Corpus id | What is ingested |
 |---|---|---|
@@ -19,12 +19,13 @@ ITAA 1936 is included because both Bendel (s 109D, Div 7A) and TR 2018/5
 ## Build
 
 ```sh
-# 1. (Optional) regenerate the Act files from the LawKitty layout
+# 1. (Optional) regenerate the Act files from a corpus tree
+#    (<corpus-dir>/tree.json + sections/); the committed JSON needs no rebuild
 LIC="Commonwealth of Australia, CC BY 4.0 (Federal Register of Legislation). Unofficial copy."
-python3 convert_lawkitty.py ../../../data/itaa-1997 itaa-1997 "Income Tax Assessment Act 1997" sources/itaa-1997.json \
+python3 convert_lawkitty.py /path/to/itaa-1997 itaa-1997 "Income Tax Assessment Act 1997" sources/itaa-1997.json \
   --alias "ITAA 1997" --alias "1997 Act" --alias "Income Tax Assessment Act 1997 (Cth)" \
   --source-url https://www.legislation.gov.au/C2004A05138/latest/text --licence "$LIC"
-python3 convert_lawkitty.py ../../../data/itaa-1936 itaa-1936 "Income Tax Assessment Act 1936" sources/itaa-1936.json \
+python3 convert_lawkitty.py /path/to/itaa-1936 itaa-1936 "Income Tax Assessment Act 1936" sources/itaa-1936.json \
   --alias "ITAA 1936" --alias "1936 Act" --alias "Income Tax Assessment Act 1936 (Cth)" --licence "$LIC"
 
 # 2. Ingest

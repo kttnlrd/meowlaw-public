@@ -38,7 +38,7 @@ hard-coded: everything jurisdiction-specific lives in TOML
 cargo build --release
 cp meowlaw.example.toml meowlaw.toml        # or: ./target/release/meowlaw init
 
-# Fictional sample sources (see examples/README.md)
+# Fictional parser samples; real-law example in examples/au-tax
 meowlaw ingest examples/widget-act
 meowlaw ingest examples/cases --kind case
 meowlaw ingest examples/handbook/staff-handbook.md --kind secondary
@@ -90,22 +90,32 @@ crates/
   meowlaw-cli      the `meowlaw` binary
 profiles/          built-in jurisdiction profiles
 ui/                static web UI (no build step)
-examples/          fictional sample sources
+examples/          parser samples; examples/au-tax holds real licensed law
 ```
 
 ## Content and licensing
 
-MeowLaw ships **no legal content**. Whoever runs an instance decides what to
-ingest and is responsible for having the right to store and republish it.
+MeowLaw ships no legal content of its own. The one exception is
+`examples/au-tax`, which commits real Australian legislation, a Tax Office
+ruling and a case summary so the example runs offline. Each file carries its
+own terms in `examples/au-tax/sources/SOURCES.md`, and those terms govern that
+material, not the AGPL.
+
+Whoever runs an instance decides what else to ingest and is responsible for
+having the right to store and republish it.
 Record the licence and as-at date on each corpus (`licence`, `as_at`); both are
 shown in the UI and returned by every MCP `fetch`.
 
 ## Licence
 
-Source-available under the [PolyForm Noncommercial License 1.0.0](LICENSE.md).
-Free for personal use, research, study, and for charities, educational
-institutions, public research bodies and government. Any commercial use,
-including selling it, offering it as a paid service, or using it in the course
-of a business, needs a separate licence: contact the copyright holder.
+Free software under the [GNU Affero General Public License v3.0 or later](LICENSE.md).
+
+You may run, modify and self-host it, including commercially and inside a
+business, at no cost. The AGPL's network clause applies: if you offer a
+modified version to users over a network, you must offer them its source.
+
+A commercial licence is available from the copyright holder for anyone who
+wants to run a modified version as a service without publishing their changes.
+See [NOTICE](NOTICE).
 
 Keep the `Required Notice` line in [NOTICE](NOTICE) with every copy.

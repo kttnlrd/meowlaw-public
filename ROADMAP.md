@@ -8,9 +8,10 @@ in rough priority order for an open-source release.
 - **Clean repository.** Publish `meowlaw/` as a new repository with fresh
   history. Do not open-source a repository whose history contains licensed
   third-party text.
-- **Licence.** PolyForm Noncommercial 1.0.0 is in place. It is
-  source-available, not OSI open source, so do not describe the project as
-  "open source". Decide the terms of the commercial licence you will offer.
+- **Licence.** Decided: AGPL-3.0-or-later, with a commercial licence offered
+  alongside it for users who cannot meet the network clause. The relicence is
+  applied across LICENSE.md, Cargo.toml, NOTICE, README, CONTRIBUTING and this
+  file. Remaining: settle the commercial terms in the NOTICE contact.
 - **Project files.** CONTRIBUTING, CODE_OF_CONDUCT, SECURITY (vulnerability
   reporting), issue templates, and a contributor licence agreement (needed so you can
   grant commercial licences over code others contribute).
