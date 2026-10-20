@@ -153,6 +153,19 @@ pub fn source_hash(path: &Path) -> Result<String> {
     Ok(h.finalize().iter().map(|b| format!("{b:02x}")).collect())
 }
 
+/// Hash of the content plus the per-source manifest overrides.
+///
+/// The bytes on disk are not the whole input: `sources.toml` can change the
+/// kind, profile, id, aliases or format without touching the file. Hashing only
+/// the file left those edits invisible, so sync reported "unchanged" and the
+/// corpus kept the old settings.
+pub fn source_hash_with_manifest(path: &Path, manifest: &Manifest) -> Result<String> {
+    let mut h = Sha256::new();
+    h.update(source_hash(path)?.as_bytes());
+    h.update(serde_json::to_vec(manifest).context("serialising the source manifest")?);
+    Ok(h.finalize().iter().map(|b| format!("{b:02x}")).collect())
+}
+
 fn unresolved_set(engine: &Engine) -> Result<BTreeSet<(String, String)>> {
     let c = engine.store.conn()?;
     let mut st = c.prepare("SELECT source, raw FROM refs WHERE target IS NULL")?;
@@ -185,7 +198,7 @@ pub fn sync(
         };
         let key = format!("source_hash:{}", path.display());
         let res: Result<SourceResult> = (|| {
-            let hash = source_hash(&path)?;
+            let hash = source_hash_with_manifest(&path, &src.manifest)?;
             let unchanged = engine.store.get_kv(&key)?.as_deref() == Some(hash.as_str());
             if unchanged && !opts.force && !opts.fresh {
                 return Ok(SourceResult {
@@ -359,5 +372,47 @@ impl SyncReport {
             }
         }
         o
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn manifest_edits_change_the_source_hash() {
+        let dir = std::env::temp_dir().join(format!(
+            "meowlaw-hash-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("act.md");
+        std::fs::write(&file, "1 Short title\n").unwrap();
+
+        let legislation = Manifest {
+            kind: Some("legislation".into()),
+            ..Default::default()
+        };
+        let case = Manifest {
+            kind: Some("case".into()),
+            ..Default::default()
+        };
+
+        let first = source_hash_with_manifest(&file, &legislation).unwrap();
+        assert_eq!(
+            first,
+            source_hash_with_manifest(&file, &legislation).unwrap(),
+            "the same inputs must hash the same"
+        );
+        assert_ne!(
+            first,
+            source_hash_with_manifest(&file, &case).unwrap(),
+            "a changed manifest must not report the source as unchanged"
+        );
+        std::fs::remove_dir_all(&dir).ok();
     }
 }
