@@ -278,6 +278,29 @@ pub struct ParsedCitation {
     pub cited: Cited,
 }
 
+/// A corpus group can start a word early ("See Income Tax Act 2004"). The
+/// regex crate has no look-ahead, so drop a leading sentence word here.
+fn strip_leading_stop_word(name: &str) -> String {
+    const STOP: [&str; 14] = [
+        "See", "Under", "In", "By", "Pursuant", "Whereas", "And", "But", "If", "Where", "When",
+        "This", "That", "Per",
+    ];
+    let mut s = name.trim();
+    loop {
+        let mut stripped = false;
+        for w in STOP {
+            if let Some(rest) = s.strip_prefix(w).and_then(|r| r.strip_prefix(' ')) {
+                s = rest.trim_start();
+                stripped = true;
+                break;
+            }
+        }
+        if !stripped {
+            return s.to_string();
+        }
+    }
+}
+
 /// Find citations in `text`. Patterns are tried in profile order (a child
 /// profile's patterns first); a span claimed by one pattern is not re-matched.
 /// Corpus-naming patterns run first so they can give later citations context.
@@ -334,7 +357,9 @@ pub fn parse_citations(
                         .or_else(|| cap.name("num"))
                         .map(|n| n.as_str())
                         .unwrap_or("");
-                    let mut corpus_name = cap.name("corpus").map(|c| c.as_str().to_string());
+                    let mut corpus_name = cap
+                        .name("corpus")
+                        .map(|c| strip_leading_stop_word(c.as_str()));
                     if corpus_name.is_none()
                         && !relative
                         && let Some(cat) = catalog
