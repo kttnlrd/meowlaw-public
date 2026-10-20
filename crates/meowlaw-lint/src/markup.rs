@@ -196,8 +196,7 @@ pub(crate) fn lint_xml(cx: &mut Cx, opts: &LintOptions) -> Result<()> {
             Ok(Event::Eof) => break,
             Ok(_) => {}
             Err(e) => {
-                let pos = (r.error_position() as usize).min(src.len());
-                let line = src[..pos].matches('\n').count() + 1;
+                let line = line_at(&src, r.error_position() as usize);
                 let excerpt = src.lines().nth(line - 1).unwrap_or("");
                 cx.add(
                     Finding::new(
@@ -295,4 +294,30 @@ pub(crate) fn lint_xml(cx: &mut Cx, opts: &LintOptions) -> Result<()> {
     let summary = manifest.content.as_deref() == Some("summary");
     check_blocks(cx, blocks, &profile, kind, Format::Xml, summary);
     Ok(())
+}
+
+/// 1-based line for a byte offset, clamped down to a char boundary.
+///
+/// quick-xml reports a byte position; a multi-byte character before it (common
+/// in legal text: §, ü, curly quotes) can leave that offset mid-character, and
+/// slicing there would panic. Reporting a lint finding must never crash.
+fn line_at(src: &str, pos: usize) -> usize {
+    let mut pos = pos.min(src.len());
+    while pos > 0 && !src.is_char_boundary(pos) {
+        pos -= 1;
+    }
+    src[..pos].matches('\n').count() + 1
+}
+
+#[cfg(test)]
+mod tests {
+    use super::line_at;
+
+    #[test]
+    fn line_at_clamps_inside_a_multibyte_char() {
+        let src = "§ 1\nsecond";
+        assert_eq!(line_at(src, 1), 1);
+        assert_eq!(line_at(src, src.len()), 2);
+        assert_eq!(line_at(src, usize::MAX), 2);
+    }
 }

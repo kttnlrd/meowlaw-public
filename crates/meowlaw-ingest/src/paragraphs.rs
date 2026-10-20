@@ -127,7 +127,15 @@ fn numbered_markers(nodes: &[Node]) -> HashMap<String, Vec<(usize, u32)>> {
 
 fn split_at_markers(text: &str, cuts: &[(usize, u32)]) -> Vec<(Option<u32>, String)> {
     let mut out = Vec::new();
-    let head = text[..cuts[0].0].trim();
+    let Some(first) = cuts.first() else {
+        let head = text.trim();
+        return if head.is_empty() {
+            Vec::new()
+        } else {
+            vec![(None, head.to_string())]
+        };
+    };
+    let head = text[..first.0].trim();
     if !head.is_empty() {
         out.push((None, head.to_string()));
     }
@@ -375,6 +383,12 @@ mod tests {
         );
         assert!(in_table_row(table, table.find("2.").unwrap()));
         assert!(!in_table_row("x\n2. Yes", 2));
+    }
+
+    #[test]
+    fn split_at_markers_accepts_no_markers() {
+        let out = split_at_markers("Just text.", &[]);
+        assert_eq!(out, vec![(None, "Just text.".to_string())]);
     }
 
     #[test]
