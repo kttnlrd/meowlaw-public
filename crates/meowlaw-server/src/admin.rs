@@ -272,7 +272,7 @@ pub async fn preview(State(state): State<AppState>, headers: HeaderMap, mp: Mult
         let path = stage(&scratch.0, &up)?;
         let report = meowlaw_search::diagnose::profile_test(
             &path,
-            &Manifest::default(),
+            &up.manifest,
             state.engine.registry(),
             Some(&state.engine.store),
         )?;
@@ -321,7 +321,7 @@ pub async fn ingest(State(state): State<AppState>, headers: HeaderMap, mp: Multi
         };
         let entry = SourceEntry {
             path: path.clone(),
-            manifest: Manifest::default(),
+            manifest: up.manifest.clone(),
         };
         let report = match meowlaw_search::sync::sync(
             &state.engine,

@@ -109,7 +109,7 @@ pattern = '^(?P<num>[0-9]+[A-Z]{0,3}(?:-[0-9]+[A-Z]{0,3})?)\.?\s+(?P<title>[A-Z]
 [[citations]]
 name = "section"
 target = { type = "provision", label = "Section" }
-pattern = '(?:\b(?i:sections?|secs?)(?:\.\s*|\s*)|\b(?i:ss?)(?:\.\s*|\s+)|§§?\s*)(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to|–|-)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+(?:Act|Code|Ordinance|Constitution|Regulations?|Rules)(?:\s+(?:of\s+)?[0-9]{4})?))?'
+pattern = '(?:\b(?i:sections?|secs?)(?:\.\s*|\s*)|\b(?i:ss?)(?:\.\s+|\s+)|§§?\s*)(?P<nums>{NUM}(?:\([0-9A-Za-z]{1,6}\))*(?:\s*(?:,|and|or|to|–|-)\s*{NUM}(?:\([0-9A-Za-z]{1,6}\))*)*)(?:\s+of\s+(?:the\s+)?(?P<corpus>[A-Z][\w’\x27()\-]*(?:\s+[A-Z(][\w’\x27()\-]*)*\s+(?:Act|Code|Ordinance|Constitution|Regulations?|Rules)(?:\s+(?:of\s+)?[0-9]{4})?))?'
 
 [[citations]]
 name = "article"

@@ -72,6 +72,59 @@ fn au_ruling_citation_is_the_bare_identifier() {
     assert_eq!(case_citations(&cits), vec!["IT 2019/1".to_string()]);
 }
 
+#[test]
+fn ca_revised_statutes_acronym_is_not_a_section() {
+    // "R.S.C." used to match the generic short section form as "S.C".
+    let cits = parse_citations("R.S.C. 1970, c. C-46", &profile("ca"), None);
+    assert!(
+        provision_numbers(&cits).is_empty(),
+        "phantom section from R.S.C.: {:?}",
+        provision_numbers(&cits)
+    );
+}
+
+#[test]
+fn ca_code_section_still_matches() {
+    let cits = parse_citations(
+        "Criminal Code, R.S.C. 1985, c. C-46, s 1",
+        &profile("ca"),
+        None,
+    );
+    assert!(provision_numbers(&cits).contains(&"1".to_string()));
+}
+
+#[test]
+fn za_reported_case_matches() {
+    let cits = parse_citations("S v Makwanyane 1995 (3) SA 391 (CC)", &profile("za"), None);
+    assert!(case_citations(&cits).iter().any(|c| c.contains("1995")));
+}
+
+#[test]
+fn in_section_of_act_names_the_act() {
+    let cits = parse_citations(
+        "Section 32 of the Income Tax Act, 1961",
+        &profile("in"),
+        None,
+    );
+    assert_eq!(
+        provision_corpus(&cits).as_deref(),
+        Some("Income Tax Act, 1961")
+    );
+    assert_eq!(provision_numbers(&cits), vec!["32".to_string()]);
+}
+
+#[test]
+fn gb_law_reports_use_square_brackets() {
+    let cits = parse_citations("[2009] 1 WLR 1", &profile("gb"), None);
+    assert_eq!(case_citations(&cits), vec!["[2009] 1 WLR 1".to_string()]);
+}
+
+#[test]
+fn hk_law_reports_match() {
+    let cits = parse_citations("HKSAR v Smith [2009] 1 HKLRD 1", &profile("hk"), None);
+    assert_eq!(case_citations(&cits), vec!["[2009] 1 HKLRD 1".to_string()]);
+}
+
 /// Confirmed gap: German pinpoints ("Abs. 1", "Satz 2") are matched by the
 /// pattern but not captured, so a subsection cannot resolve. Left ignored
 /// until pinpoint support is designed for the starter profiles.
