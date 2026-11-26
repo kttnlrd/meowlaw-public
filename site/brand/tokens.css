@@ -1,0 +1,92 @@
+/* lawkitty design tokens. Dark is the default theme; set data-theme="light" on <html> for light. */
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root, [data-theme="dark"] {
+  --void: #120d17;
+  --surface: #1e1626;
+  --surface-hover: #291f33;
+  --surface-sunken: #0b080e;
+  --line: #3a2d45;
+  --line-strong: #7a6788;
+  --ink: #f7eee2;
+  --ink-muted: #b8a9bf;
+  --catnip: #c6f432;
+  --catnip-hover: #d6ff5a;
+  --catnip-soft: #27310c;
+  --on-catnip: #120d17;
+  --yarn: #ff7ac8;
+  --yarn-soft: #3b1731;
+  --tabby: #ffb347;
+  --tabby-deep: #d9761c;
+  --tabby-soft: #3a2711;
+  --gavel: #3fd6b8;
+  --gavel-soft: #0f302a;
+  --hiss: #ff5e45;
+  --hiss-soft: #3e1610;
+  --outcome-yes: var(--gavel);
+  --outcome-no: var(--hiss);
+  --outcome-mixed: var(--tabby);
+  --link: var(--gavel);
+  --focus: var(--catnip);
+  --shadow-pounce: 4px 4px 0 0 #c6f432;
+  --shadow-pounce-yarn: 4px 4px 0 0 #ff7ac8;
+  --shadow-sit: 0 2px 0 0 #0b080e;
+}
+
+[data-theme="light"] {
+  --void: #fbf6ee;
+  --surface: #ffffff;
+  --surface-hover: #f6efe4;
+  --surface-sunken: #f3ebdf;
+  --line: #e6dccd;
+  --line-strong: #8a7a92;
+  --ink: #1f1726;
+  --ink-muted: #5e5166;
+  --catnip: #4d7300;
+  --catnip-hover: #3f5f00;
+  --catnip-soft: #eef5d6;
+  --on-catnip: #ffffff;
+  --yarn: #c2185b;
+  --yarn-soft: #fde4f0;
+  --tabby: #9a5b00;
+  --tabby-deep: #d9761c;
+  --tabby-soft: #fff0da;
+  --gavel: #00796b;
+  --gavel-soft: #dcf4ef;
+  --hiss: #c62828;
+  --hiss-soft: #fde6e3;
+  --shadow-pounce: 4px 4px 0 0 #1f1726;
+  --shadow-pounce-yarn: 4px 4px 0 0 #c2185b;
+  --shadow-sit: 0 2px 0 0 #e6dccd;
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-20: 80px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --border-chunky: 2px;
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-sans: Figtree, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Type styles */
+.lk-hero { font-family: var(--font-display); font-size: 72px; line-height: 72px; font-weight: 400; letter-spacing: -0.01em; }
+.lk-h1 { font-family: var(--font-display); font-size: 44px; line-height: 48px; font-weight: 400; }
+.lk-h2 { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 400; }
+.lk-lead { font-family: var(--font-sans); font-size: 20px; line-height: 30px; font-weight: 500; }
+.lk-body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.lk-label { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.lk-caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.04em; }
+.lk-cite { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 400; }
+.lk-legal { font-family: var(--font-sans); font-size: 17px; line-height: 29px; font-weight: 400; }
+.lk-legal-note { font-family: var(--font-sans); font-size: 15px; line-height: 25px; font-weight: 400; }

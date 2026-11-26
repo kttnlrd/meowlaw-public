@@ -1,0 +1,31 @@
+/* lawkitty theme: Laser pointer. Load this file (or set data-theme="laser-pointer") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+[data-theme="laser-pointer"] {
+  --color-bg: #0b0a10;
+  --color-surface: #15131c;
+  --color-surface-hover: #1e1a28;
+  --color-border: #2a2535;
+  --color-text: #f2eef7;
+  --color-text-muted: #a9a1b8;
+  --color-accent: #ff4d4d;
+  --color-heading: #f2eef7;
+  --color-accent-hover: #ff4d4d;
+  --font-ui: 'Space Grotesk', Figtree, system-ui, sans-serif;
+  --font-body: 'Space Grotesk', Figtree, system-ui, sans-serif;
+  --font-mono: 'Space Grotesk', Figtree, system-ui, sans-serif;
+  --theme-header-bg: #08070c;
+  --theme-control-border: #6b6080;
+  --theme-notice: #ffb347;
+  --theme-radius: 10px;
+  --theme-border-width: 1px;
+  --theme-logo: "light text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+*{cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><circle cx='14' cy='14' r='12' fill='%23ff4d4d' fill-opacity='.18'/><circle cx='14' cy='14' r='5' fill='%23ff4d4d'/></svg>") 14 14,auto!important}
+a{transition:text-shadow .15s}
+a:hover{text-shadow:0 0 6px #ff4d4d,0 0 14px rgba(255,77,77,.6)}
+h1::after{content:"";display:inline-block;width:10px;height:10px;margin-left:12px;border-radius:50%;background:#ff4d4d;box-shadow:0 0 10px 4px rgba(255,77,77,.6);vertical-align:middle;animation:lk-dot 2.4s ease-in-out infinite}
+@keyframes lk-dot{0%,100%{transform:translate(0,0)}25%{transform:translate(18px,-6px)}50%{transform:translate(-8px,4px)}75%{transform:translate(10px,6px)}}
+@media (prefers-reduced-motion:reduce){h1::after{animation:none}}

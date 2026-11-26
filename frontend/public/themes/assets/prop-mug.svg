@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
+<path d="M120 70 q-15 -25 0 -50 M170 70 q-15 -25 0 -50" stroke="#bbbbbb" stroke-width="6" fill="none" stroke-linecap="round"/>
+<path d="M230 130 q70 0 70 55 q0 55 -70 55" fill="none" stroke="#1a1a1a" stroke-width="22"/><path d="M230 130 q70 0 70 55 q0 55 -70 55" fill="none" stroke="#F28C28" stroke-width="10"/>
+<path d="M50 90 h190 l-15 200 q-2 15 -18 15 h-124 q-16 0 -18 -15 z" fill="#F28C28" stroke="#1a1a1a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+<ellipse cx="145" cy="92" rx="95" ry="14" fill="#5B3A29" stroke="#1a1a1a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="145" y="215" font-family="Arial Black, Arial" font-weight="900" font-size="34" text-anchor="middle" fill="#ffffff" stroke="#1a1a1a" stroke-width="2">#1 BOSS</text>
+</svg>

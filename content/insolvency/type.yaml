@@ -1,0 +1,12 @@
+key: insolvency
+label: Keays insolvency
+default_configured: false
+loader: content.insolvency.loader
+display: sections
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+  - {target: case,        via: citation_index, limit: 20}
+search: {fts_table: insolvency_fts, embedding_source_type: insolvency, graph_node_type: insolvency}
+data_markers: [insolvency-keays, keays]
+jurisdiction: AU
+auth: admin

@@ -1,0 +1,11 @@
+key: nz-mtg
+label: NZ Master Tax Guide
+default_configured: false
+loader: content.nz-mtg.loader
+display: sections
+recommend:
+  - {target: legislation, via: graph_edge, edge: explained_in, limit: 20}
+search: {fts_table: nz_mtg_fts, embedding_source_type: nz_mtg, graph_node_type: nz_mtg}
+data_markers: [nz-master-tax-guide, nz_master_tax_guide.json]
+jurisdiction: NZ
+auth: admin

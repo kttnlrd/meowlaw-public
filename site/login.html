@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in to lawkitty</title>
+<meta name="description" content="Sign in to lawkitty with an email login code, Google or Microsoft.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<meta name="theme-color" content="#120d17">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="lawkitty">
+<meta property="og:title" content="Sign in to lawkitty">
+<meta property="og:description" content="Sign in to lawkitty with an email login code.">
+<meta property="og:image" content="https://lawkitty.app/assets/og-image.png">
+<meta property="og:url" content="https://lawkitty.app/login.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lawkitty.app/assets/og-image.png">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="css/site.css?v=6">
+</head>
+<body>
+<div class="announce">lawkitty is free to use during beta.</div>
+
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="lawkitty home"><img src="assets/lawkitty-lockup-cat.png" alt="lawkitty"></a>
+    <div class="nav-actions">
+      <a class="btn btn-sm" href="setup.html">Connect to AI</a>
+    </div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Mobile">
+        <a class="btn btn-sm" href="setup.html">Connect to AI</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<main class="auth">
+  <div class="auth-card">
+    <img class="auth-logo" src="assets/lawkitty-cat-head.png" alt="">
+    <h1>Sign in</h1>
+    <p class="auth-sub">Enter your email and we'll send you a 6-digit login code. No password to remember.</p>
+
+    <form id="login-form">
+      <label for="email" class="sr-only">Email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+      <label class="check"><input id="remember" type="checkbox"> Keep me signed in</label>
+      <button type="submit" class="btn btn-primary">Email me a login code</button>
+    </form>
+
+    <div id="code-step" hidden>
+      <p class="auth-sub">Enter the 6-digit code from the email, or click the link in the email instead.</p>
+      <form id="code-form">
+        <label for="code" class="sr-only">Login code</label>
+        <input id="code" class="code-input" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" placeholder="000000" required>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+      <p class="muted" style="font-size: 13px;"><a href="#" id="resend">Resend code</a></p>
+    </div>
+
+    <div id="sso" class="sso" hidden>
+      <p class="sso-or"><span>or</span></p>
+    </div>
+
+    <p class="err" id="login-err" hidden>We couldn't send the email right now. Please try again in a minute.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <img src="assets/lawkitty-lockup-cat.png" alt="lawkitty">
+    <nav aria-label="Footer">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:meow@lawkitty.app">meow@lawkitty.app</a>
+    </nav>
+    <small>© 2026 Cadena Legal Pty Ltd · ABN 78 657 024 774</small>
+  </div>
+</footer>
+
+<script src="js/login.js?v=20261127b"></script>
+</body>
+</html>

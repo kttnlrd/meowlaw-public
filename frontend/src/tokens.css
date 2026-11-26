@@ -1,0 +1,222 @@
+/* lawkitty design tokens.
+   Canonical theme interface: the nine --color-* vars (+ --font-ui/--font-body/--font-mono).
+   Theme packs (public/themes/*.css) and the built-in themes below both set these.
+   The legacy raw tokens (--void, --surface, --ink, --catnip, …) are ALIASES derived
+   from --color-*, so components and lawkitty-ui.css that still read them keep working. */
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+/* ====== Root: dark defaults + derived aliases ====== */
+:root {
+  /* canonical --color-* (dark) */
+  --color-bg: #120d17;
+  --color-surface: #1e1626;
+  --color-surface-hover: #291f33;
+  --color-border: #3a2d45;
+  --color-text: #f7eee2;
+  --color-text-muted: #b8a9bf;
+  --color-accent: #c6f432;
+  --color-accent-hover: #d6ff5a;
+  --color-heading: #f7eee2;
+
+  /* semantic secondary accents (stable across themes) */
+  --yarn: #ff7ac8;
+  --tabby: #ffb347;
+  --tabby-deep: #d9761c;
+  --gavel: #3fd6b8;
+  --hiss: #ff5e45;
+  --outcome-yes: var(--gavel);
+  --outcome-no: var(--hiss);
+  --outcome-mixed: var(--tabby);
+  --link: var(--gavel);
+  --focus: var(--catnip);
+  --on-catnip: #120d17;
+
+  /* legacy raw-token aliases ← --color-* */
+  --void: var(--color-bg);
+  --surface: var(--color-surface);
+  --surface-hover: var(--color-surface-hover);
+  --surface-sunken: color-mix(in srgb, var(--color-bg) 55%, var(--color-surface));
+  --line: var(--color-border);
+  --line-strong: color-mix(in srgb, var(--color-border) 55%, var(--color-text));
+  --ink: var(--color-text);
+  --ink-muted: var(--color-text-muted);
+  --catnip: var(--color-accent);
+  --catnip-hover: var(--color-accent-hover);
+  --catnip-soft: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
+  --yarn-soft: color-mix(in srgb, var(--yarn) 18%, var(--color-surface));
+  --tabby-soft: color-mix(in srgb, var(--tabby) 18%, var(--color-surface));
+  --gavel-soft: color-mix(in srgb, var(--gavel) 18%, var(--color-surface));
+  --hiss-soft: color-mix(in srgb, var(--hiss) 18%, var(--color-surface));
+
+  /* fonts */
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-sans: Figtree, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-ui: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* layout (global) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-20: 80px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --border-chunky: 2px;
+
+  /* shadows */
+  --shadow-pounce: 4px 4px 0 0 var(--color-accent);
+  --shadow-pounce-yarn: 4px 4px 0 0 #ff7ac8;
+  --shadow-sit: 0 2px 0 0 #0b080e;
+}
+
+/* ====== Built-in themes ====== */
+
+/* Dark: restore the hand-tuned values that differ from the derived aliases. */
+[data-theme="dark"] {
+  --surface-sunken: #0b080e;
+  --line-strong: #7a6788;
+  --catnip-soft: #27310c;
+  --yarn-soft: #3b1731;
+  --tabby-soft: #3a2711;
+  --gavel-soft: #0f302a;
+  --hiss-soft: #3e1610;
+}
+
+[data-theme="light"] {
+  --color-bg: #fbf6ee;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f6efe4;
+  --color-border: #e6dccd;
+  --color-text: #1f1726;
+  --color-text-muted: #5e5166;
+  --color-accent: #c6f432;
+  --color-accent-hover: #d6ff5a;
+  --color-heading: #1f1726;
+
+  --yarn: #c2185b;
+  --tabby: #9a5b00;
+  --tabby-deep: #d9761c;
+  --gavel: #00796b;
+  --hiss: #c62828;
+  --on-catnip: #120d17;
+  --surface-sunken: #f3ebdf;
+  --line-strong: #8a7a92;
+  --catnip-soft: #eef5d6;
+  --yarn-soft: #fde4f0;
+  --tabby-soft: #fff0da;
+  --gavel-soft: #dcf4ef;
+  --hiss-soft: #fde6e3;
+  --shadow-pounce: 4px 4px 0 0 #1f1726;
+  --shadow-pounce-yarn: 4px 4px 0 0 #c2185b;
+  --shadow-sit: 0 2px 0 0 #e6dccd;
+}
+
+/* Classic AustLII: white, black text, Times serif, #0000EE underlined links. */
+[data-theme="classic"] {
+  --color-bg: #ffffff;
+  --color-surface: #eeeeee;
+  --color-surface-hover: #dddddd;
+  --color-border: #808080;
+  --color-text: #000000;
+  --color-text-muted: #333333;
+  --color-accent: #0000ee;
+  --color-accent-hover: #551a8b;
+  --color-heading: #000000;
+
+  --yarn: #0000ee;
+  --tabby: #0000ee;
+  --tabby-deep: #551a8b;
+  --gavel: #006600;
+  --hiss: #cc0000;
+  --outcome-mixed: #806000;
+  --link: #0000ee;
+  --focus: #0000ee;
+  --on-catnip: #ffffff;
+  --surface-sunken: #f4f4f4;
+  --line-strong: #555555;
+  --catnip-soft: #eeeefc;
+  --yarn-soft: #eeeefc;
+  --tabby-soft: #eeeefc;
+  --gavel-soft: #eef6ee;
+  --hiss-soft: #fdeeee;
+  --shadow-pounce: 2px 2px 0 0 #808080;
+  --shadow-pounce-yarn: 2px 2px 0 0 #808080;
+  --shadow-sit: 0 1px 0 0 #cccccc;
+
+  --font-display: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
+  --font-mono: "Times New Roman", Times, serif;
+}
+
+/* Modern AustLII: light grey canvas, white panels, Source Sans 3, red accent, flat. */
+[data-theme="modern"] {
+  --color-bg: #f8f8f8;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f6fafd;
+  --color-border: #ebebeb;
+  --color-text: #333333;
+  --color-text-muted: #727272;
+  --color-accent: #f32928;
+  --color-accent-hover: #dc0d0c;
+  --color-heading: #333333;
+
+  --yarn: #f32928;
+  --tabby: #f32928;
+  --tabby-deep: #dc0d0c;
+  --gavel: #006600;
+  --hiss: #cc0000;
+  --outcome-mixed: #806000;
+  --link: #f32928;
+  --focus: #f32928;
+  --on-catnip: #ffffff;
+  --surface-sunken: #f0f4f7;
+  --line-strong: #8f8f8f;
+  --catnip-soft: #fdeeee;
+  --yarn-soft: #fdeeee;
+  --tabby-soft: #fdeeee;
+  --gavel-soft: #eef6ee;
+  --hiss-soft: #fdeeee;
+  --shadow-pounce: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  --shadow-pounce-yarn: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  --shadow-sit: 0 1px 0 0 #ebebeb;
+
+  --font-display: "Source Sans 3", "Source Sans Pro", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  --font-sans: "Source Sans 3", "Source Sans Pro", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ====== Theme packs (public/themes/*.css define --color-* + fonts dynamically). ======
+   These blocks only bridge pack fonts to canonical names and set text-on-accent
+   contrast. Packs define --font-ui/--font-body/--font-mono directly. */
+[data-theme="federal-register"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="terminal"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #000000; }
+[data-theme="laser-pointer"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="barristers-chambers"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #000000; }
+[data-theme="hairball"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="comic-book"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="classic-mac"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="modern-mac"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="windows-95"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="windows-xp"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="windows-vista"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+[data-theme="simpsons"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #000000; }
+[data-theme="squishy"] { --font-sans: var(--font-body); --font-display: var(--font-ui); --on-catnip: #ffffff; }
+
+/* ====== Type styles ====== */
+.lk-hero { font-family: var(--font-display); font-size: 72px; line-height: 72px; font-weight: 400; letter-spacing: -0.01em; }
+.lk-h1 { font-family: var(--font-display); font-size: 44px; line-height: 48px; font-weight: 400; }
+.lk-h2 { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 400; }
+.lk-lead { font-family: var(--font-sans); font-size: 20px; line-height: 30px; font-weight: 500; }
+.lk-body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.lk-label { font-family: var(--font-sans); font-size: 14px; line-height: 20px; font-weight: 600; }
+.lk-caption { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.04em; }
+.lk-cite { font-family: var(--font-mono); font-size: 14px; line-height: 22px; font-weight: 400; }
+.lk-legal { font-family: var(--font-sans); font-size: 17px; line-height: 29px; font-weight: 400; }
+.lk-legal-note { font-family: var(--font-sans); font-size: 15px; line-height: 25px; font-weight: 400; }

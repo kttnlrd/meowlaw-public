@@ -1,0 +1,11 @@
+key: treaty
+label: Tax treaties
+default_configured: true
+loader: content.treaty.loader
+display: tree
+display_options: {depth: articles}
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+search: {fts_table: treaties_fts, embedding_source_type: treaty, graph_node_type: treaty}
+jurisdiction: AU
+auth: user

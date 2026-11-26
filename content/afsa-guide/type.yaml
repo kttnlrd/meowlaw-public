@@ -1,0 +1,11 @@
+key: afsa-guide
+label: AFSA practice guidance
+default_configured: true
+loader: content.afsa-guide.loader
+display: paragraphs
+display_options: {numbered: true}
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+search: {fts_table: afsa_fts, embedding_source_type: afsa_guide, graph_node_type: afsa_guide}
+jurisdiction: AU
+auth: user

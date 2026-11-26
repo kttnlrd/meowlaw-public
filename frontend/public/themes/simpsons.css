@@ -1,0 +1,41 @@
+/* lawkitty theme: Simpsons (satire). Springfield-sky desktop, signature skin-yellow, thick ink cel outlines. Load this file (or set data-theme="simpsons") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+[data-theme="simpsons"] {
+  --color-bg: #5AB7F0;
+  --color-desktop: url('/app/themes/assets/sky-background.svg') center/cover no-repeat, linear-gradient(180deg, #3E9BE0 0%, #A9DCFA 100%);
+  --color-surface: #ffffff;
+  --color-surface-hover: #EAF6FF;
+  --color-border: #1A1A1A;
+  --color-text: #1A1A1A;
+  --color-text-muted: #444444;
+  --color-accent: #FFD521;
+  --color-heading: #1A1A1A;
+  --color-accent-hover: #F2C200;
+  --font-ui: 'Luckiest Guy', 'Comic Sans MS', system-ui, sans-serif;
+  --font-body: 'Quicksand', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --theme-header-bg: #FFD521;
+  --theme-control-border: #1A1A1A;
+  --theme-notice: #1A1A1A;
+  --theme-radius: 8px;
+  --theme-border-width: 3px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+header{position:relative;border-bottom:3px solid #1A1A1A!important}
+header::after{content:"";position:absolute;right:14px;top:50%;width:44px;height:33px;margin-top:-16px;pointer-events:none;background:url('/app/themes/assets/prop-donut.svg') center/contain no-repeat}
+@media (max-width:767px){header::after{display:none!important}header{padding-top:12px!important}}
+footer{border-top:3px solid #1A1A1A!important}
+main{background:#ffffff!important;border:3px solid #1A1A1A!important;border-radius:8px!important;box-shadow:6px 6px 0 #1A1A1A!important;margin-top:28px!important;margin-bottom:28px!important}
+h1{font-family:'Luckiest Guy',sans-serif!important;font-weight:400!important;letter-spacing:.03em!important;color:#FFD521!important;-webkit-text-stroke:1.5px #1A1A1A;text-shadow:3px 3px 0 #1A1A1A}
+h2,h3{font-family:'Luckiest Guy',sans-serif!important;font-weight:400!important;letter-spacing:.03em!important;color:#1A1A1A!important}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary,button{background:#FFD521!important;color:#1A1A1A!important;border:2.5px solid #1A1A1A!important;border-radius:8px!important;box-shadow:4px 4px 0 #1A1A1A!important}
+button:hover,.lk-btn-primary:hover,.lk-reader-btn--primary:hover{background:#F2C200!important}
+button:active,.lk-btn-primary:active,.lk-reader-btn--primary:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #1A1A1A!important}
+input,select{background:#fff!important;color:#1A1A1A!important;border:2.5px solid #1A1A1A!important;border-radius:8px!important;box-shadow:none!important}
+input:focus,select:focus{outline:3px solid #F48FB1!important;outline-offset:1px}
+::selection{background:#FFD521;color:#1A1A1A}
+a:hover{background:#FFD521;color:#1A1A1A!important}
+@media(min-width:768px){.lk-sidebar{margin:28px 0 28px 28px!important;border:3px solid #1A1A1A!important;border-radius:8px!important;box-shadow:6px 6px 0 #1A1A1A!important}}

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Yacht hull -->
+  <path d="M8 40 L56 40 L50 50 L14 50 Z" fill="#279e88" stroke="#1a6b5e" stroke-width="1"/>
+  <!-- Mast -->
+  <rect x="30" y="10" width="2" height="30" fill="#8B4513"/>
+  <!-- Sail -->
+  <path d="M32 12 L48 30 L32 35 Z" fill="white" stroke="#ccc" stroke-width="0.5"/>
+  <!-- Flag -->
+  <path d="M32 10 L32 14 L38 12 Z" fill="#e74c3c"/>
+  <!-- Kitten body -->
+  <ellipse cx="22" cy="32" rx="6" ry="5" fill="#f4a460"/>
+  <!-- Kitten head -->
+  <circle cx="22" cy="26" r="4" fill="#f4a460"/>
+  <!-- Ears -->
+  <polygon points="19,23 18,18 21,22" fill="#f4a460"/>
+  <polygon points="25,23 26,18 23,22" fill="#f4a460"/>
+  <!-- Inner ears -->
+  <polygon points="19.5,22.5 19,19 21,22" fill="#ffb6c1"/>
+  <polygon points="24.5,22.5 25,19 23,22" fill="#ffb6c1"/>
+  <!-- Eyes -->
+  <circle cx="21" cy="26" r="1" fill="#333"/>
+  <circle cx="24" cy="26" r="1" fill="#333"/>
+  <!-- Nose -->
+  <circle cx="22.5" cy="27.5" r="0.5" fill="#ff69b4"/>
+  <!-- Whiskers -->
+  <line x1="18" y1="27" x2="14" y2="26" stroke="#333" stroke-width="0.3"/>
+  <line x1="18" y1="28" x2="14" y2="28" stroke="#333" stroke-width="0.3"/>
+  <line x1="27" y1="27" x2="31" y2="26" stroke="#333" stroke-width="0.3"/>
+  <line x1="27" y1="28" x2="31" y2="28" stroke="#333" stroke-width="0.3"/>
+  <!-- Tail -->
+  <path d="M16 34 Q10 30 12 26" fill="none" stroke="#f4a460" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Water -->
+  <path d="M4 45 Q12 43 20 45 Q28 47 36 45 Q44 43 52 45 Q58 47 62 45" fill="none" stroke="#279e88" stroke-width="0.8" opacity="0.5"/>
+</svg>

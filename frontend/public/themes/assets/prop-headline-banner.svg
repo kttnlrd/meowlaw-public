@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360">
+<path d="M40 60 L1160 30 L1140 320 L60 340 Z" fill="#ffffff" stroke="#1a1a1a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="90" y="70" width="1020" height="20" fill="#1a1a1a"/>
+<text x="600" y="190" font-family="Arial Black, Arial" font-weight="900" font-size="96" text-anchor="middle" fill="#1a1a1a">YOUR HEADLINE</text>
+<text x="600" y="270" font-family="Georgia, serif" font-style="italic" font-size="40" text-anchor="middle" fill="#444">Local man unimpressed, sources say</text>
+</svg>

@@ -1,0 +1,14 @@
+key: legislation
+label: Legislation
+default_configured: true
+loader: content.legislation.loader
+display: tree
+display_options: {depth: sections, tabular_acts: [itaa97-tables]}
+recommend:
+  - {target: case,               via: graph_edge, edge: cites,       limit: 10}
+  - {target: ruling,             via: graph_edge, edge: interprets,  limit: 10}
+  - {target: ato-private-ruling, via: graph_edge, edge: interprets,  limit: 10}
+  - {target: commentary,         via: graph_edge, edge: explained_in, limit: 10}
+search: {fts_table: sections_fts, embedding_source_type: section, graph_node_type: section}
+jurisdiction: AU
+auth: user

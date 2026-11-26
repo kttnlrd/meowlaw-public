@@ -1,0 +1,32 @@
+/* lawkitty theme: Comic book. Load this file (or set data-theme="comic-book") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap');
+
+[data-theme="comic-book"] {
+  --color-bg: #fff7d6;
+  --color-surface: #ffffff;
+  --color-surface-hover: #ffe9a8;
+  --color-border: #111111;
+  --color-text: #111111;
+  --color-text-muted: #3a3a3a;
+  --color-accent: #1e4fd8;
+  --color-heading: #111111;
+  --color-accent-hover: #1e4fd8;
+  --font-ui: 'Comic Neue', 'Comic Sans MS', system-ui, sans-serif;
+  --font-body: 'Comic Neue', 'Comic Sans MS', system-ui, sans-serif;
+  --font-mono: 'Comic Neue', 'Comic Sans MS', system-ui, sans-serif;
+  --theme-header-bg: #ffe14d;
+  --theme-control-border: #111111;
+  --theme-notice: #c0161b;
+  --theme-radius: 4px;
+  --theme-border-width: 3px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+h1{font-family:Bangers,'Comic Neue',sans-serif!important;font-weight:400!important;font-size:44px!important;line-height:48px!important;letter-spacing:.05em!important;color:#ffe14d!important;-webkit-text-stroke:1.5px #111;text-shadow:3px 3px 0 #111;transform:rotate(-1.2deg);transform-origin:left}
+h2{font-family:Bangers,'Comic Neue',sans-serif!important;font-weight:400!important;letter-spacing:.06em!important;font-size:20px!important;color:#c0161b!important}
+header{background-image:radial-gradient(rgba(232,38,43,.35) 1.5px,transparent 1.8px)!important;background-size:9px 9px!important}
+[style*="--border-chunky"]{box-shadow:5px 5px 0 #111111!important}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary{box-shadow:3px 3px 0 #111111!important;border:3px solid #111111!important}
+a:hover{display:inline-block;transform:rotate(-2deg) scale(1.04)}
+body{font-weight:700}

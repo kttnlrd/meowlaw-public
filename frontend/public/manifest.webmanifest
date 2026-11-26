@@ -1,0 +1,16 @@
+{
+  "name": "lawkitty",
+  "short_name": "lawkitty",
+  "description": "A beautiful UI for legal text — tax, corporations, AML/CTF and more.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#120d17",
+  "theme_color": "#120d17",
+  "icons": [
+    { "src": "/app/favicon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app/favicon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/app/favicon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

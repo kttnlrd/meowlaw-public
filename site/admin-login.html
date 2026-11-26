@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lawkitty admin — sign in</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="css/site.css?v=5">
+</head>
+<body>
+<main class="auth">
+  <div class="auth-card">
+    <img class="auth-logo" src="assets/lawkitty-cat-head.png" alt="">
+    <h1>Admin sign in</h1>
+    <p class="auth-sub">Enter the admin email and we'll send a 6-digit login code.</p>
+
+    <form id="login-form">
+      <label for="email" class="sr-only">Email</label>
+      <input id="email" name="email" type="email" placeholder="admin@example.com" autocomplete="email" required>
+      <button type="submit" class="btn btn-primary">Email me a login code</button>
+    </form>
+
+    <div id="code-step" hidden>
+      <p class="auth-sub">Enter the 6-digit code from the email, or click the link in the email instead.</p>
+      <form id="code-form">
+        <label for="code" class="sr-only">Login code</label>
+        <input id="code" class="code-input" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" placeholder="000000" required>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+      <p class="muted" style="font-size: 13px;"><a href="#" id="resend">Resend code</a></p>
+    </div>
+
+    <p class="err" id="err" hidden>We couldn't send the email right now. Please try again in a minute.</p>
+  </div>
+</main>
+
+<script src="js/admin-login.js"></script>
+</body>
+</html>
