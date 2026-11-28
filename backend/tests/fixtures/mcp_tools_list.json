@@ -1,0 +1,533 @@
+[
+ {
+  "description": "Resolve a section alias or short-hand reference to its act and section number.\n\n    Handles common shorthand: 's 100A', 'Div 7A', 'Part IVA', 'Subdiv 115-C',\n    '109Y', '8-1', 'Div 152', etc.\n\n    Rules:\n    - Div 7A          → ITAA 1936, Division 7A (ss 109Y-109ZQ)\n    - s 100A          → ITAA 1936, s 100A\n    - Part IVA        → ITAA 1936, Part IVA (ss 177A-177P)\n    - Subdiv 115-C    → ITAA 1997, Subdivision 115-C (ss 115-215 to 115-228)\n    - Simple section numbers like 109Y → ITAA 1936, s 109Y\n    - Section-number-shaped like 8-1   → ITAA 1997, s 8-1\n    - Div 152         → ITAA 1997, Division 152\n\n    Falls back to search_legislation when no rule matches.\n    ",
+  "inputSchema": {
+   "properties": {
+    "reference": {
+     "title": "Reference",
+     "type": "string"
+    }
+   },
+   "required": [
+    "reference"
+   ],
+   "title": "resolve_aliasArguments",
+   "type": "object"
+  },
+  "name": "resolve_alias"
+ },
+ {
+  "description": "Look up the definition of a term, searched across all acts.\n\n    The requested act is preferred; matches in other acts (e.g. a term defined\n    in ITAA 1936 s 318 rather than the requested act) are returned under\n    ``also_defined_in``. When the definition is a cross-reference to another\n    section, ``cross_reference`` carries that section's document ID.\n    ",
+  "inputSchema": {
+   "properties": {
+    "act": {
+     "title": "Act",
+     "type": "string"
+    },
+    "term": {
+     "title": "Term",
+     "type": "string"
+    }
+   },
+   "required": [
+    "act",
+    "term"
+   ],
+   "title": "get_definitionArguments",
+   "type": "object"
+  },
+  "name": "get_definition"
+ },
+ {
+  "description": "Return server version, usage conventions, tool descriptions, and coverage counts.\n\n    Call this FIRST before using any other tool, and call it AGAIN whenever a\n    tool fails, returns null, or returns an unexpected empty result — the\n    failure is usually a query-format or citation-format problem documented here.\n    ",
+  "inputSchema": {
+   "properties": {},
+   "title": "get_infoArguments",
+   "type": "object"
+  },
+  "name": "get_info"
+ },
+ {
+  "description": "List every content type on this instance: key, label, class, display,\n    status (ok | not_configured | missing), document count and jurisdiction.\n\n    The key is the content_type value on search results.\n    ",
+  "inputSchema": {
+   "properties": {},
+   "title": "list_content_typesArguments",
+   "type": "object"
+  },
+  "name": "list_content_types"
+ },
+ {
+  "description": "List all ATO rulings grouped by year and type.\n\n    Returns the full ruling tree with ATO.gov.au and AustLII links.\n    ",
+  "inputSchema": {
+   "properties": {
+    "counts_only": {
+     "default": false,
+     "title": "Counts Only",
+     "type": "boolean"
+    },
+    "limit": {
+     "default": 100,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "offset": {
+     "default": 0,
+     "title": "Offset",
+     "type": "integer"
+    },
+    "type": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Type"
+    },
+    "year": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Year"
+    }
+   },
+   "title": "list_rulingsArguments",
+   "type": "object"
+  },
+  "name": "list_rulings"
+ },
+ {
+  "description": "Report a bug or issue with a tool's output.\n\n    Detects duplicates by (param_hash, category). If a matching open or\n    known issue already exists, increments the hit counter and returns the\n    existing ticket. Otherwise creates a new issue (CDN-NNNN) in the\n    issues table.\n\n    Args:\n        category: Type of issue being reported.\n        tool: Name of the tool that produced the wrong output.\n        params: Parameters that were passed to the tool.\n        expected: What the correct output should have been.\n        actual: What the tool actually returned.\n        note: Free-form notes about the issue.\n\n    Returns:\n        JSON with ticket, status, and duplicate_of keys.\n    ",
+  "inputSchema": {
+   "properties": {
+    "actual": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Actual"
+    },
+    "category": {
+     "enum": [
+      "bad_data",
+      "missing_content",
+      "stale_compilation",
+      "wrong_result",
+      "tool_error",
+      "suggestion",
+      "bug"
+     ],
+     "title": "Category",
+     "type": "string"
+    },
+    "expected": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Expected"
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Note"
+    },
+    "params": {
+     "anyOf": [
+      {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Params"
+    },
+    "tool": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Tool"
+    }
+   },
+   "required": [
+    "category"
+   ],
+   "title": "report_issueArguments",
+   "type": "object"
+  },
+  "name": "report_issue"
+ },
+ {
+  "description": "Return the graph context block for a node (graph spec §6.2).\n\n    Gives an LLM the compact neighbourhood of any graph node without\n    fetching full document text: per-edge-type counts + top exemplars.\n\n    Args:\n        key:    canonical graph key, e.g. \"section:itaa-1997:118-110\",\n                \"public_ruling:TR 2025/1\", \"case:[2015] HCA 48\",\n                \"private_ruling:EV/1011261243735\", \"commentary:MTG:ch12\".\n                Accepts the resolved_by graph_key from resolve_alias.\n                Also accepts leg:<act>:<section>, <act>:<section>, ruling:/pbr:/case:\n                document ids and plain citations (\"s 8-1 ITAA 1997\", \"TR 2024/1\").\n        depth:  1 = node neighbourhood (~80 tokens); 2 = + aggregated\n                neighbourhood-of-neighbourhood (<=400 tokens). Default 1.\n\n    Returns:\n        JSON {key, label, depth, tokens, text} where `text` is the\n        token-lean block (header + lines like \"INTERPRETED_BY: 4 rulings\n        (TR 2025/1 | TD 2024/2)\"). Unknown keys return an error object.\n    ",
+  "inputSchema": {
+   "properties": {
+    "depth": {
+     "default": 1,
+     "title": "Depth",
+     "type": "integer"
+    },
+    "key": {
+     "title": "Key",
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ],
+   "title": "graph_neighbourhoodArguments",
+   "type": "object"
+  },
+  "name": "graph_neighbourhood"
+ },
+ {
+  "description": "Find the shortest path between two graph nodes (graph spec §6.3).\n\n    Answers \"how does this connect to that?\" — e.g. the chain of\n    rulings/cases/commentary linking a private ruling to a High Court case.\n\n    Args:\n        from_key: canonical graph key, e.g. \"private_ruling:EV/1011261243735\".\n        to_key:   canonical graph key, e.g. \"case:[1986] HCA 45\".\n        max_hops: hop cap (1-20, default 10).\n\n    Returns:\n        JSON {from, to, hops, path, edges} — path is the ordered node list\n        (key + label per hop), edges give the typed connection per hop.\n        Unreachable pairs return path: null with a reason.\n    ",
+  "inputSchema": {
+   "properties": {
+    "from_key": {
+     "title": "From Key",
+     "type": "string"
+    },
+    "max_hops": {
+     "default": 10,
+     "title": "Max Hops",
+     "type": "integer"
+    },
+    "to_key": {
+     "title": "To Key",
+     "type": "string"
+    }
+   },
+   "required": [
+    "from_key",
+    "to_key"
+   ],
+   "title": "graph_pathArguments",
+   "type": "object"
+  },
+  "name": "graph_path"
+ },
+ {
+  "description": "Hybrid keyword search over legislation, cases and public rulings.\n\n    types is a subset of legislation|case|ruling|rg|afsa|treaty|private_ruling\n    (default: legislation, case, ruling). private_ruling uses semantic\n    fact-pattern matching; the rest are keyword. Find IDs here, then call\n    fetch to read a document.\n    commentary|insolvency|nz_mtg|nz_ruling are not search-indexed: alone they\n    return not_indexed (or not_available), mixed in they are listed under\n    skipped_types. Unknown types are an invalid_param error.\n    ",
+  "inputSchema": {
+   "properties": {
+    "act": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Act"
+    },
+    "cursor": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Cursor"
+    },
+    "limit": {
+     "default": 10,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "query": {
+     "title": "Query",
+     "type": "string"
+    },
+    "status": {
+     "default": "current",
+     "title": "Status",
+     "type": "string"
+    },
+    "types": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Types"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "title": "searchArguments",
+   "type": "object"
+  },
+  "name": "search"
+ },
+ {
+  "description": "Return one document by document ID or human citation.\n\n    Large documents are split into ~8000-character chunks on paragraph /\n    sentence boundaries. ``chunk`` takes a single number (``2``), a range\n    (``'2-4'``), a list (``'1,3'``), or ``'all'`` to return the whole document\n    in one call — so once you have a document ID from search you can read it\n    without paging. The response carries ``total_chunks``, the chunks returned,\n    and ``next_chunk`` for anything after them. Use ``'all'`` deliberately: on a\n    very long document it returns a lot of text in one response.\n\n    Source attribution is deliberately NOT attached to every fetch (it would be\n    paid on every call). Call ``notice(ref)`` once when you need the exact\n    licence wording for a source — for example before quoting it — or pass\n    ``with_notice=True`` for the compact one-line version on this call only.\n\n    ref examples: 'leg:itaa-1997:8-1', 's 8-1 ITAA 1997', 'TR 2024/1',\n    '[2024] HCA 1', 'rg:1', 'rg:103:5.15' (single paragraph), 'dta:usa:7',\n    'afsa:<slug>' (AFSA practice guidance), 'afsa:<slug>:<para>',\n    'pbr:1051234567890'.\n    ",
+  "inputSchema": {
+   "properties": {
+    "as_at": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "As At"
+    },
+    "chunk": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "string"
+      }
+     ],
+     "default": 1,
+     "title": "Chunk"
+    },
+    "ref": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Ref"
+    },
+    "refs": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Refs"
+    },
+    "with_notice": {
+     "default": false,
+     "title": "With Notice",
+     "type": "boolean"
+    }
+   },
+   "title": "fetchArguments",
+   "type": "object"
+  },
+  "name": "fetch"
+ },
+ {
+  "description": "Return the source, attribution and reuse terms for a document reference.\n\n    Call this once per source when you need the exact wording — for example\n    before quoting the material in a document you are drafting, or to check\n    whether a source may be reproduced at all. Document fetches do not carry\n    the notice on every call, so this is the way to get it without paying for\n    it repeatedly.\n\n    Returns the compact source line, the full attribution wording, any\n    unofficial-copy / no-endorsement notice, and links to the licence and the\n    publisher's terms. A null ``notice`` means no reuse notice applies to that\n    source (it is not cleared for display, e.g. treaty texts of unverified\n    provenance).\n    ",
+  "inputSchema": {
+   "properties": {
+    "ref": {
+     "title": "Ref",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ref"
+   ],
+   "title": "noticeArguments",
+   "type": "object"
+  },
+  "name": "notice"
+ },
+ {
+  "description": "Structure of a collection or document.\n\n    id=None lists collections (acts + treaty countries). id=<act-slug> returns\n    the act tree (depth: parts|divisions|sections). id=<country> returns treaty\n    articles.\n    ",
+  "inputSchema": {
+   "properties": {
+    "cursor": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Cursor"
+    },
+    "depth": {
+     "default": "sections",
+     "title": "Depth",
+     "type": "string"
+    },
+    "id": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Id"
+    }
+   },
+   "title": "outlineArguments",
+   "type": "object"
+  },
+  "name": "outline"
+ },
+ {
+  "description": "Deterministic citation links for a document.\n\n    One consistent, pageable schema for every document type:\n\n      {id, type, direction, limit,\n       cites:      [{id, type, citation, title}],   # forward citations\n       cited_by:   [{id, type, citation, title}],   # reverse citations\n       cites_total, cited_by_total, next_cursor, truncated}\n\n    id is a document ID: 'case:<year>-<court>-<n>', 'rg:<n>', 'afsa:<slug>',\n    or 'leg:<act>:<section>' (also accepted: '<act>:<section>' and graph keys such\n    as 'section:<act>:<section>'). limit caps each of cites/cited_by independently;\n    pass next_cursor to page. Every entry carries a fetchable document id\n    (leg:/case:/ruling:/pbr:). cited_by for legislation comes from the graph;\n    the reverse index for cases is a deferred build and returns [].\n    ",
+  "inputSchema": {
+   "properties": {
+    "cursor": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Cursor"
+    },
+    "direction": {
+     "default": "both",
+     "title": "Direction",
+     "type": "string"
+    },
+    "id": {
+     "title": "Id",
+     "type": "string"
+    },
+    "limit": {
+     "default": 20,
+     "title": "Limit",
+     "type": "integer"
+    },
+    "types": {
+     "anyOf": [
+      {
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Types"
+    }
+   },
+   "required": [
+    "id"
+   ],
+   "title": "relatedArguments",
+   "type": "object"
+  },
+  "name": "related"
+ },
+ {
+  "description": "Flag a failed recall: a search or fetch that missed what it should have found.\n\n    query is what was searched; expected is the document that should have come back\n    (e.g. 's 8-1 ITAA 1997', 'TR 2024/1'); note is optional context. Logged for the\n    LawKitty team as a failed recall. Use report_issue for wrong data or tool bugs.\n    ",
+  "inputSchema": {
+   "properties": {
+    "expected": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Expected"
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Note"
+    },
+    "query": {
+     "title": "Query",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "title": "report_bad_recallArguments",
+   "type": "object"
+  },
+  "name": "report_bad_recall"
+ }
+]

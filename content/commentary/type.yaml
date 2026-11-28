@@ -1,0 +1,13 @@
+key: commentary
+label: CCH commentary
+default_configured: false
+loader: content.commentary.loader
+display: sections
+display_options: {publications: [master-tax-guide, master-gst-guide, master-tax-examples, oecd-mtc-commentary]}
+recommend:
+  - {target: legislation, via: graph_edge, edge: explained_in, limit: 20}
+search: {fts_table: commentary_fts, embedding_source_type: commentary, graph_node_type: commentary}
+data_markers: [master-tax-guide, master-gst-guide, master-tax-examples, oecd-mtc-commentary,
+                  master_tax_guide.json, master_gst_guide.json, master_tax_examples.json]
+jurisdiction: AU
+auth: admin

@@ -1,0 +1,34 @@
+/* lawkitty theme: Windows 95. Load this file (or set data-theme="windows-95") when the theme is selected. */
+
+[data-theme="windows-95"] {
+  --color-bg: #c0c0c0;
+  --color-desktop: #008080;
+  --color-surface: #ffffff;
+  --color-surface-hover: #e0e0e0;
+  --color-border: #808080;
+  --color-text: #000000;
+  --color-text-muted: #3a3a3a;
+  --color-accent: #000080;
+  --color-heading: #000000;
+  --color-accent-hover: #000080;
+  --font-ui: 'MS Sans Serif', Tahoma, Verdana, Arial, sans-serif;
+  --font-body: 'MS Sans Serif', Tahoma, Verdana, Arial, sans-serif;
+  --font-mono: 'Courier New', monospace;
+  --theme-header-bg: #c0c0c0;
+  --theme-control-border: #808080;
+  --theme-notice: #000000;
+  --theme-radius: 0px;
+  --theme-border-width: 1px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+header{position:relative}
+header::before{content:"lawkitty - Legislation Explorer";display:block;font:700 13px/18px Tahoma,Verdana,sans-serif;color:#fff;background:linear-gradient(90deg,#000080,#1084d0);padding:3px 8px}
+header::after{content:"_  \25A1  \00D7";position:absolute;right:10px;top:2px;font:700 12px/18px Tahoma,sans-serif;color:#000;background:#c0c0c0;padding:0 6px;box-shadow:inset -1px -1px #0a0a0a,inset 1px 1px #fff}
+@media (max-width:767px){header::after{display:none!important}}
+main{background:#ffffff!important;box-shadow:inset -1px -1px #fff,inset 1px 1px #808080,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a!important;margin-top:28px!important;margin-bottom:28px!important}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary,button{background:#c0c0c0!important;color:#000!important;border:0!important;border-radius:0!important;box-shadow:inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px #808080,inset 2px 2px #dfdfdf!important}
+input,select{border:0!important;border-radius:0!important;box-shadow:inset -1px -1px #fff,inset 1px 1px #808080,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a!important;background:#fff!important}
+a:hover{background:#000080;color:#fff!important}
+@media(min-width:768px){.lk-sidebar{margin:28px 0 28px 28px!important;box-shadow:0 12px 32px rgba(0,0,0,.18)!important}}

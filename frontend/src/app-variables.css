@@ -1,0 +1,11 @@
+/* Theme-specific element styling that lives outside the token system.
+   (The --color-* ↔ token aliasing now lives in tokens.css.) */
+
+/* Classic AustLII: underlined blue links (other themes use the accent for links). */
+[data-theme="classic"] a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+[data-theme="classic"] a:visited {
+  color: #551a8b;
+}

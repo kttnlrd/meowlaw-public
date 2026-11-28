@@ -1,0 +1,33 @@
+/* lawkitty theme: Classic Mac. Load this file (or set data-theme="classic-mac") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&display=swap');
+
+[data-theme="classic-mac"] {
+  --color-bg: #dddddd;
+  --color-desktop: linear-gradient(160deg, #e8e8e8 0%, #d0d0d0 55%, #b8bcc8 100%);
+  --color-surface: #ffffff;
+  --color-surface-hover: #ccccff;
+  --color-border: #000000;
+  --color-text: #000000;
+  --color-text-muted: #333333;
+  --color-accent: #2b2bb8;
+  --color-heading: #000000;
+  --color-accent-hover: #2b2bb8;
+  --font-ui: Geneva, Verdana, 'DejaVu Sans', sans-serif;
+  --font-body: Geneva, Verdana, 'DejaVu Sans', sans-serif;
+  --font-mono: Monaco, 'Courier New', monospace;
+  --theme-header-bg: #eeeeee;
+  --theme-control-border: #000000;
+  --theme-notice: #000000;
+  --theme-radius: 0px;
+  --theme-border-width: 1px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+h1,h2{font-family:'Pixelify Sans',Geneva,sans-serif!important;letter-spacing:.02em!important}
+header{position:relative}
+header::before{content:"lawkitty";display:block;text-align:center;font:600 13px/16px 'Pixelify Sans',Geneva,sans-serif;color:#000;background:repeating-linear-gradient(0deg,#000 0 1px,#fff 1px 3px);border-bottom:1px solid #000;padding:2px 0}
+main{background:#ffffff!important;border:1px solid #000!important;box-shadow:2px 2px 0 #000!important;margin-top:28px!important;margin-bottom:28px!important}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary{background:#ffffff!important;color:#000!important;border:1px solid #000!important;border-radius:6px!important;box-shadow:0 0 0 2px #fff,0 0 0 3px #000!important}
+input,select{border-radius:0!important}
+@media(min-width:768px){.lk-sidebar{margin:28px 0 28px 28px!important;box-shadow:2px 2px 0 #000!important}}

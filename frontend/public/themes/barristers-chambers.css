@@ -1,0 +1,29 @@
+/* lawkitty theme: Barrister's chambers. Load this file (or set data-theme="barristers-chambers") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=EB+Garamond:wght@400;500;600;700&display=swap');
+
+[data-theme="barristers-chambers"] {
+  --color-bg: #2b1a10;
+  --color-surface: #1f3b2a;
+  --color-surface-hover: #274a35;
+  --color-border: #6b4f2a;
+  --color-text: #f3e9d2;
+  --color-text-muted: #cdbf9f;
+  --color-accent: #d4af37;
+  --color-heading: #f3e9d2;
+  --color-accent-hover: #d4af37;
+  --font-ui: 'EB Garamond', Garamond, Georgia, serif;
+  --font-body: 'EB Garamond', Garamond, Georgia, serif;
+  --font-mono: 'EB Garamond', Garamond, Georgia, serif;
+  --theme-header-bg: #20130b;
+  --theme-control-border: #a8873f;
+  --theme-notice: #e0b45a;
+  --theme-radius: 2px;
+  --theme-border-width: 1px;
+  --theme-logo: "light text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+h1,h2{font-family:Cinzel,'EB Garamond',Georgia,serif!important;color:#d4af37!important;letter-spacing:.06em!important}
+header{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9px),repeating-linear-gradient(90deg,#24160d 0 40px,#2e1c11 40px 75px,#271810 75px 120px)!important}
+footer{background-image:repeating-linear-gradient(90deg,#24160d 0 40px,#2e1c11 40px 75px,#271810 75px 120px)!important}
+body{font-size:18px}

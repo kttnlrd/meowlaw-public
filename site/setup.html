@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect your AI to lawkitty</title>
+<meta name="description" content="Connect Claude, ChatGPT or Claude Code to lawkitty over MCP.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<meta name="theme-color" content="#120d17">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="lawkitty">
+<meta property="og:title" content="Connect your AI to lawkitty">
+<meta property="og:description" content="Connect Claude, ChatGPT or Claude Code to lawkitty over MCP.">
+<meta property="og:image" content="https://lawkitty.app/assets/og-image.png">
+<meta property="og:url" content="https://lawkitty.app/setup.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lawkitty.app/assets/og-image.png">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="css/site.css">
+<style>
+  .pg { margin-top: 4px; }
+  .pg .pg-auth { font-size: 15px; margin: 12px 0; }
+  .pg-field { margin: 14px 0; }
+  .pg-field > label { display: block; font: 600 13px/20px var(--font-sans); color: var(--ink-muted); margin-bottom: 6px; }
+  .pg select, .pg input[type=text], .pg input[type=number], .pg textarea {
+    font: 400 15px/24px var(--font-sans); color: var(--ink);
+    background: var(--surface); border: 2px solid var(--line-strong);
+    border-radius: var(--radius-md); padding: 10px 12px; width: 100%; box-sizing: border-box;
+  }
+  .pg textarea { font-family: var(--font-mono); font-size: 14px; line-height: 1.5; resize: vertical; }
+  .pg select:focus, .pg input:focus, .pg textarea:focus { outline: 2px solid var(--catnip); outline-offset: 1px; }
+  .pg-check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-muted); cursor: pointer; margin: 12px 0; }
+  .pg .pg-desc { white-space: pre-line; font-size: 14px; margin: 4px 0 0; }
+  .pg-arg-row { margin: 12px 0; }
+  .pg .copyblock pre { white-space: pre-wrap; word-break: break-word; max-height: 420px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<div class="announce">lawkitty is free to use during beta.</div>
+
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="lawkitty home"><img src="assets/lawkitty-lockup-cat.png" alt="lawkitty"></a>
+    <div class="nav-actions">
+      <a class="btn btn-sm" href="setup.html" aria-current="page">Connect to AI</a>
+      <a class="btn btn-sm btn-primary" href="login.html">Get pouncing</a>
+    </div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Mobile">
+        <a class="btn btn-sm" href="setup.html" aria-current="page">Connect to AI</a>
+        <a class="btn btn-sm btn-primary" href="login.html">Get pouncing</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<main class="wrap">
+<article class="legal">
+  <h1>Connect to AI</h1>
+  <p class="intro">Connect Claude, ChatGPT or Claude Code to lawkitty so your assistant cites real sources instead of guessing.</p>
+
+  <h2>Connect with a link</h2>
+  <p>Add lawkitty to your AI app with this link. The app then opens lawkitty to sign you in with <strong>Google</strong>, <strong>Microsoft</strong> or a login code, and asks you to <strong>Allow</strong> access. There is no token to copy or keep safe, and your assistant sees exactly the sources your account can open.</p>
+  <div class="copyblock">
+    <div class="copyblock-head"><span>connector link</span><button class="copy-btn" data-target="mcp-link">Copy</button></div>
+<pre id="mcp-link">https://lawkitty.app/mcp</pre>
+  </div>
+
+  <h2>Claude (web and desktop)</h2>
+  <p><strong>Settings → Connectors → Add custom connector</strong>. Name it <code>lawkitty</code>, paste the link, then click <strong>Connect</strong> and sign in. Leave the advanced OAuth fields empty: lawkitty registers Claude for you.</p>
+
+  <h2>ChatGPT</h2>
+  <p><strong>Settings → Apps &amp; Connectors → Create</strong>, paste the link and choose <strong>OAuth</strong> authentication, then sign in when ChatGPT opens lawkitty.</p>
+
+  <h2>Claude Code</h2>
+  <p>Run this in your terminal, then run <code>/mcp</code> inside Claude Code and choose lawkitty to sign in:</p>
+  <div class="copyblock">
+    <div class="copyblock-head"><span>terminal</span><button class="copy-btn" data-target="claude-code">Copy</button></div>
+<pre id="claude-code">claude mcp add --transport http lawkitty https://lawkitty.app/mcp</pre>
+  </div>
+
+  <h2>Advanced: connect with a token</h2>
+  <p>For clients that cannot open a browser to sign in. <a href="login.html">Sign in</a>, go to <strong>Account → MCP connector → Generate token</strong>, and use <code>https://lawkitty.app/mcp/YOUR_TOKEN</code> as the URL. Anyone holding the token can use your access, so keep it private and revoke it from the same page when you no longer need it.</p>
+
+  <h2>Playground — try the tools</h2>
+  <p class="intro">Test any tool right here, no client needed. It runs the same tools your MCP client calls. <a href="login.html?next=/setup.html">Sign in</a> first.</p>
+
+  <div class="pg" id="playground">
+    <p class="muted pg-auth" id="pg-auth" hidden><a href="login.html?next=/setup.html">Sign in</a> to use the playground.</p>
+
+    <div id="pg-main" hidden>
+      <div class="pg-field">
+        <label for="pg-tool">Tool</label>
+        <select id="pg-tool"></select>
+      </div>
+      <p class="muted pg-desc" id="pg-desc" hidden></p>
+
+      <div class="pg-args" id="pg-args"></div>
+
+      <label class="pg-check"><input type="checkbox" id="pg-raw"> raw JSON arguments</label>
+      <div class="pg-field" id="pg-raw-wrap" hidden>
+        <textarea id="pg-raw-json" rows="6" spellcheck="false">{"query": "capital gains"}</textarea>
+      </div>
+
+      <button class="btn btn-primary" id="pg-run">Run</button>
+      <p class="err" id="pg-err" hidden></p>
+
+      <div class="copyblock" id="pg-result-wrap" hidden>
+        <div class="copyblock-head"><span>result</span><button class="copy-btn" data-target="pg-result">Copy</button></div>
+        <pre id="pg-result"></pre>
+      </div>
+    </div>
+  </div>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <img src="assets/lawkitty-lockup-cat.png" alt="lawkitty">
+    <nav aria-label="Footer">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:meow@lawkitty.app">meow@lawkitty.app</a>
+    </nav>
+    <small>© 2026 Cadena Legal Pty Ltd · ABN 78 657 024 774</small>
+  </div>
+</footer>
+
+<script src="js/setup-copy.js"></script>
+<script src="js/setup-playground.js"></script>
+</body>
+</html>

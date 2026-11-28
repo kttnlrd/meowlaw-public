@@ -1,0 +1,32 @@
+/* lawkitty theme: Windows XP. Load this file (or set data-theme="windows-xp") when the theme is selected. */
+
+[data-theme="windows-xp"] {
+  --color-bg: #ece9d8;
+  --color-desktop: radial-gradient(ellipse 50% 35% at 76% 14%, rgba(255,255,235,.95) 0%, rgba(255,255,235,0) 55%), linear-gradient(180deg, #3f8fd4 0%, #6fb1e8 20%, #a5d2ee 32%, #8ec63f 40%, #5ca332 52%, #3c7a1e 66%, #285610 100%);
+  --color-surface: #ffffff;
+  --color-surface-hover: #f4f2e8;
+  --color-border: #7f9db9;
+  --color-text: #000000;
+  --color-text-muted: #4d4d4d;
+  --color-accent: #0b4fb3;
+  --color-heading: #000000;
+  --color-accent-hover: #0b4fb3;
+  --font-ui: Tahoma, Verdana, 'Segoe UI', sans-serif;
+  --font-body: Tahoma, Verdana, 'Segoe UI', sans-serif;
+  --font-mono: 'Lucida Console', 'Courier New', monospace;
+  --theme-header-bg: #0a49c1;
+  --theme-control-border: #5f7f9f;
+  --theme-notice: #9a5b00;
+  --theme-radius: 3px;
+  --theme-border-width: 1px;
+  --theme-logo: "light text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+header,footer{background:linear-gradient(180deg,#0a5bd8 0%,#2a7cf0 6%,#0f56d2 45%,#0a49c1 100%)!important}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary{background:linear-gradient(180deg,#ffffff,#ece9d8 85%,#d6d0c5)!important;color:#000!important;border:1px solid #003c74!important;border-radius:3px!important}
+header a[style*="background: #0b4fb3"]{background:linear-gradient(180deg,#3c9a3c,#267326 55%,#1f611f)!important;color:#fff!important;font-style:italic!important;border:1px solid #1a4f1a!important;border-radius:10px!important}
+h1{color:#0b4fb3!important;text-transform:none!important;letter-spacing:0!important}
+.lk-settings__card{border-color:#7f9db9!important}
+main{background:#ffffff!important;border:1px solid #003c74!important;border-radius:3px!important;margin-top:28px!important;margin-bottom:28px!important}
+@media(min-width:768px){.lk-sidebar{margin:28px 0 28px 28px!important;border-radius:8px!important;box-shadow:0 12px 32px rgba(0,0,0,.18)!important}}

@@ -1,0 +1,12 @@
+key: ato-private-ruling
+label: ATO private rulings
+default_configured: true
+loader: content.ato-private-ruling.loader
+display: paragraphs
+recommend:
+  - {target: legislation,        via: graph_edge, edge: interprets, limit: 20}
+  - {target: ato-private-ruling, via: embedding,  limit: 10}
+search: {fts_table: private_rulings_fts, embedding_source_type: ruling, graph_node_type: private_ruling}
+jurisdiction: AU
+auth: user
+licence: ato

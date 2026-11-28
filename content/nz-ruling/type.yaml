@@ -1,0 +1,12 @@
+# IRD Tax Technical rulings; NZ never satisfies an AU search scope
+key: nz-ruling
+label: NZ IRD rulings
+default_configured: true
+loader: content.nz-ruling.loader
+display: paragraphs
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+  - {target: nz-ruling,   via: embedding,      limit: 10}
+search: {fts_table: rulings_fts, embedding_source_type: ruling, graph_node_type: ruling}
+jurisdiction: NZ
+auth: user

@@ -1,0 +1,42 @@
+/* lawkitty theme: Squishy. Load this file and squishy.js only while the theme is active. */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap');
+
+[data-theme="squishy"] {
+  --color-bg: #fdf0f7;
+  --color-surface: #ffffff;
+  --color-surface-hover: #ffe1f0;
+  --color-border: #f2a7cc;
+  --color-text: #3d1f33;
+  --color-text-muted: #6e4a63;
+  --color-accent: #b0166e;
+  --color-accent-hover: #d42a8a;
+  --color-heading: #b0166e;
+  --font-ui: 'Baloo 2', Nunito, system-ui, sans-serif;
+  --font-body: 'Baloo 2', Nunito, system-ui, sans-serif;
+  --theme-header-bg: #ffd6ea;
+  --theme-control-border: #b55187;
+  --theme-notice: #8a4b00;
+  --theme-radius: 26px;
+  --theme-border-width: 3px;
+}
+
+/* Effects (global rules: load only with this theme) */
+h1,h2{font-weight:800!important;text-transform:none!important;letter-spacing:0!important}
+h1{color:#b0166e!important;transform-origin:50% 100%;animation:lk-wobble 3.2s ease-in-out infinite}
+@keyframes lk-wobble{0%,100%{transform:scale(1,1) rotate(0)}20%{transform:scale(1.04,.96) rotate(-1deg)}40%{transform:scale(.97,1.04) rotate(1deg)}60%{transform:scale(1.02,.98)}}
+header,footer{background-image:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 60%),radial-gradient(circle at 15% 130%,rgba(255,122,200,.45) 0 80px,transparent 81px),radial-gradient(circle at 80% -40%,rgba(122,215,255,.45) 0 90px,transparent 91px)!important}
+header a:not([style*="background"]){color:#3d1f33!important;text-decoration-color:#b0166e!important}
+header img{transition:transform .3s cubic-bezier(.3,1.8,.4,1)}
+header img:hover{transform:scale(1.12,.9) rotate(-4deg)}
+[style*="background: var(--color-accent)"],.lk-btn-primary,.lk-reader-btn--primary,button{background:linear-gradient(180deg,#ff8fcf,#d42a8a 55%,#b0166e)!important;border:0!important;border-radius:999px!important;box-shadow:inset 0 4px 0 rgba(255,255,255,.5),inset 0 -4px 0 rgba(0,0,0,.12),0 5px 0 #8a1257,0 10px 18px rgba(176,22,110,.3)!important}
+header [style*="background: var(--color-accent)"],header .lk-btn-primary{animation:lk-nudge 3s cubic-bezier(.3,1.6,.5,1) infinite}
+@keyframes lk-nudge{0%,80%,100%{transform:none}85%{transform:scale(1.14,.86)}90%{transform:scale(.9,1.12) translateY(-6px)}95%{transform:scale(1.04,.97)}}
+input,select{border-radius:20px!important;box-shadow:inset 0 3px 0 rgba(176,22,110,.08)!important}
+a:hover,button:hover{display:inline-block;animation:lk-puff .5s cubic-bezier(.3,1.8,.4,1)}
+@keyframes lk-puff{40%{transform:scale(1.12,.92)}70%{transform:scale(.96,1.06)}}
+.lk-squish{transform:scale(1.14,.8)!important;transition:transform .07s ease-out!important;transform-origin:50% 100%!important;animation:none!important}
+a.lk-squish,a.lk-boing{display:inline-block}
+.lk-boing{animation:lk-jelly .8s cubic-bezier(.2,.9,.3,1.4) both!important;transform-origin:50% 100%}
+@keyframes lk-jelly{0%{transform:scale(1.14,.8)}25%{transform:scale(.86,1.18) translateY(-6px)}42%{transform:scale(1.1,.92)}58%{transform:scale(.95,1.06)}74%{transform:scale(1.03,.98)}100%{transform:scale(1,1)}}
+:active:not(:has(:active)){transform:scale(1.1,.86)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}:active:not(:has(:active)){transform:none}}

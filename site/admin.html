@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>lawkitty · ops</title>
+<link rel="stylesheet" href="/brand/tokens.css">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--void); color: var(--ink); font-family: var(--font-sans); }
+  a { color: var(--link); }
+
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 28px; border-bottom: 1px solid var(--line); }
+  .top h1 { font-family: var(--font-display); font-size: 20px; margin: 0; letter-spacing: .5px; }
+  .top h1 span { color: var(--catnip); }
+  .top .meta { color: var(--ink-muted); font-size: 13px; font-family: var(--font-mono); }
+  .top .meta b { color: var(--ink); font-weight: 600; }
+  button { font-family: var(--font-sans); font-size: 13px; font-weight: 600; background: var(--surface-hover); color: var(--ink); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 7px 14px; cursor: pointer; }
+  button:hover { border-color: var(--catnip); }
+  button.primary { background: var(--catnip); color: var(--on-catnip); border-color: var(--catnip); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 28px 60px; }
+  .grid { display: grid; gap: 18px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 16px 18px; }
+  .card .k { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--ink-muted); }
+  .card .v { font-size: 30px; font-weight: 700; font-family: var(--font-display); margin-top: 6px; }
+  .card .v small { font-size: 14px; color: var(--ink-muted); font-weight: 500; }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 18px; }
+  .panel h2 { margin: 0 0 14px; font-size: 15px; font-family: var(--font-display); letter-spacing: .4px; }
+  .panel h2 .sub { color: var(--ink-muted); font-weight: 400; font-size: 12px; margin-left: 8px; }
+
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .twocol { grid-template-columns: 1fr; } }
+
+  .bars { display: flex; align-items: flex-end; gap: 3px; height: 130px; }
+  .bar { flex: 1; background: var(--catnip); border-radius: 2px 2px 0 0; min-height: 2px; position: relative; opacity: .9; }
+  .bar:hover { opacity: 1; }
+  .bar .tip { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--surface-hover); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 3px 8px; font-size: 11px; white-space: nowrap; z-index: 5; }
+  .bar:hover .tip { display: block; }
+  .xlabels { display: flex; gap: 3px; margin-top: 6px; }
+  .xlabels span { flex: 1; text-align: center; font-size: 10px; color: var(--ink-muted); font-family: var(--font-mono); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--ink-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  td.mono { font-family: var(--font-mono); font-size: 12px; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 600; }
+  .pill.trial { background: var(--tabby-soft); color: var(--tabby-deep); }
+  .pill.solo { background: var(--yarn-soft); color: var(--yarn); }
+  .pill.power { background: var(--catnip-soft); color: var(--catnip); }
+  .pill.anon { background: var(--surface-hover); color: var(--ink-muted); }
+
+  .logs { background: var(--surface-sunken); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; max-height: 420px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+  .logs .err { color: var(--hiss); }
+  .kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .kv .item { font-size: 13px; }
+  .kv .item b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--ink-muted); font-weight: 600; }
+  .kv .item span { font-family: var(--font-mono); }
+
+  .err-banner { background: var(--hiss-soft); color: var(--hiss); border: 1px solid var(--hiss); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 18px; font-weight: 600; display: none; }
+  .empty { color: var(--ink-muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>lawkitty <span>· ops</span></h1>
+  <div class="meta"><b id="uptime">—</b> up · v<b id="ver">—</b></div>
+  <button id="refresh" class="primary">Refresh</button>
+</div>
+
+<div class="wrap">
+  <div id="err" class="err-banner"></div>
+
+  <div class="grid">
+    <div class="cards">
+      <div class="card"><div class="k">Users</div><div class="v" id="s-users">—</div></div>
+      <div class="card"><div class="k">Active 7d</div><div class="v" id="s-active">—</div></div>
+      <div class="card"><div class="k">MCP tokens</div><div class="v" id="s-tokens">—</div></div>
+      <div class="card"><div class="k">MCP calls</div><div class="v" id="s-calls">—</div></div>
+    </div>
+
+    <div class="twocol">
+      <div class="panel">
+        <h2>Signups <span class="sub">last 14 days</span></h2>
+        <div class="bars" id="chart-signups"></div>
+        <div class="xlabels" id="x-signups"></div>
+      </div>
+      <div class="panel">
+        <h2>MCP calls <span class="sub">last 14 days</span></h2>
+        <div class="bars" id="chart-calls"></div>
+        <div class="xlabels" id="x-calls"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Signups <span class="sub" id="tier-summary"></span></h2>
+      <div id="users-table"></div>
+    </div>
+
+    <div class="twocol">
+      <div class="panel">
+        <h2>Corpus</h2>
+        <div class="kv" id="health"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Recent logs <span class="sub">journalctl -u lawkitty</span></h2>
+      <div class="logs" id="logs">loading…</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+key: regulatory-guide
+label: ASIC regulatory guides
+default_configured: true
+loader: content.regulatory-guide.loader
+display: paragraphs
+display_options: {numbered: true}
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+search: {fts_table: rg_fts, embedding_source_type: regulatory_guide, graph_node_type: regulatory_guide}
+jurisdiction: AU
+auth: user
+licence: regulatory-guides

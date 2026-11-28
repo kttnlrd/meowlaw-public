@@ -1,0 +1,33 @@
+/* lawkitty theme: Terminal. Load this file (or set data-theme="terminal") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+
+[data-theme="terminal"] {
+  --color-bg: #050805;
+  --color-surface: #0b120b;
+  --color-surface-hover: #102010;
+  --color-border: #1e3a1e;
+  --color-text: #33ff66;
+  --color-text-muted: #1fbf4a;
+  --color-accent: #33ff66;
+  --color-heading: #33ff66;
+  --color-accent-hover: #33ff66;
+  --font-ui: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --theme-header-bg: #081008;
+  --theme-control-border: #2e9e48;
+  --theme-notice: #ffcc00;
+  --theme-radius: 0px;
+  --theme-border-width: 1px;
+  --theme-logo: "light text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+body{text-shadow:0 0 4px rgba(51,255,102,.45)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);z-index:50}
+h1::before{content:"> ";}
+h1::after{content:"_";animation:lk-blink 1s steps(1) infinite}
+@keyframes lk-blink{50%{opacity:0}}
+input{caret-color:#33ff66}
+a:hover{background:#33ff66;color:#050805!important;text-shadow:none}
+@media (prefers-reduced-motion:reduce){h1::after{animation:none}}

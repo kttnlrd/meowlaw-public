@@ -1,0 +1,26 @@
+/* lawkitty theme: Federal Register. Load this file (or set data-theme="federal-register") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+[data-theme="federal-register"] {
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f4;
+  --color-surface-hover: #e6eff4;
+  --color-border: #c8d3da;
+  --color-text: #2d2d31;
+  --color-text-muted: #55555c;
+  --color-accent: #1d3557;
+  --color-heading: #2d2d31;
+  --color-accent-hover: #1d3557;
+  --font-ui: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --theme-header-bg: #e6eff4;
+  --theme-control-border: #6b7c88;
+  --theme-notice: #b03a0e;
+  --theme-radius: 4px;
+  --theme-border-width: 1px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+h1{font-weight:300!important;text-transform:none!important;letter-spacing:0!important;font-size:34px!important;line-height:42px!important}a:hover{color:#417595}

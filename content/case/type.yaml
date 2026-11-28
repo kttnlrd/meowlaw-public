@@ -1,0 +1,12 @@
+key: case
+label: Cases
+default_configured: true
+loader: content.case.loader
+display: paragraphs
+display_options: {numbered: true, show_catchwords: true}
+recommend:
+  - {target: legislation, via: citation_index, limit: 20}
+  - {target: case,        via: embedding,      limit: 10}
+search: {fts_table: cases_fts, embedding_source_type: case, graph_node_type: case}
+jurisdiction: AU
+auth: user

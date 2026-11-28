@@ -1,0 +1,36 @@
+[package]
+name = "lawkitty-local"
+version = "0.1.0"
+edition = "2021"
+description = "Local-only, read-only LawKitty server: lazy loading over a downloaded data folder"
+license = "AGPL-3.0-only"
+publish = false
+
+[features]
+default = ["server"]
+# The HTTP server and the `lawkitty-local` binary. The desktop app builds the library without it.
+server = ["dep:axum", "dep:tokio"]
+
+[[bin]]
+name = "lawkitty-local"
+path = "src/main.rs"
+required-features = ["server"]
+
+[dependencies]
+axum = { version = "0.8", default-features = false, features = ["http1", "json", "query", "tokio"], optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "macros"], optional = true }
+bytes = "1"
+serde = "1"
+serde_json = { version = "1", features = ["preserve_order"] }
+rusqlite = { version = "0.43", features = ["bundled"] }
+regex = "1"
+
+[dev-dependencies]
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

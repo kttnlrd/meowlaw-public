@@ -1,0 +1,34 @@
+/* lawkitty theme: Hairball. Load this file (or set data-theme="hairball") when the theme is selected. */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+
+[data-theme="hairball"] {
+  --color-bg: #f6ebdd;
+  --color-surface: #fff7ee;
+  --color-surface-hover: #f1e2cf;
+  --color-border: #e2c9a8;
+  --color-text: #3b2a20;
+  --color-text-muted: #6b5444;
+  --color-accent: #a8471a;
+  --color-heading: #3b2a20;
+  --color-accent-hover: #a8471a;
+  --font-ui: Fredoka, 'Baloo 2', system-ui, sans-serif;
+  --font-body: Fredoka, 'Baloo 2', system-ui, sans-serif;
+  --font-mono: Fredoka, 'Baloo 2', system-ui, sans-serif;
+  --theme-header-bg: #f0dcc4;
+  --theme-control-border: #9a7752;
+  --theme-notice: #8a4b00;
+  --theme-radius: 18px;
+  --theme-border-width: 1px;
+  --theme-logo: "dark text";
+}
+
+/* Theme effects. These are global rules, so only load them while this theme is active. */
+body::before{content:"";position:fixed;inset:-40px;pointer-events:none;z-index:40;opacity:.55;
+background-image:radial-gradient(ellipse 7px 1.2px at 20% 30%,rgba(168,71,26,.45),transparent),radial-gradient(ellipse 1.2px 6px at 70% 60%,rgba(168,71,26,.4),transparent),radial-gradient(ellipse 6px 1px at 45% 80%,rgba(120,80,40,.4),transparent);
+background-size:180px 140px,230px 170px,160px 200px;animation:lk-drift 14s linear infinite}
+@keyframes lk-drift{to{transform:translate(40px,40px)}}
+header,footer{background-image:radial-gradient(rgba(168,71,26,.12) 1px,transparent 1.4px)!important;background-size:9px 11px!important}
+h1{text-shadow:0 0 1px #a8471a,0 0 6px rgba(168,71,26,.25)}
+a:hover{display:inline-block;animation:lk-wiggle .35s ease-in-out}
+@keyframes lk-wiggle{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){body::before,a:hover{animation:none}}

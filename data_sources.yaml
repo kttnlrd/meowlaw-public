@@ -1,0 +1,18 @@
+# Committed manifest: default sources only (plan §3). Optional sources and
+# allow_optional_sources: true belong in the git-ignored data_sources.local.yaml;
+# backend/data_sources.py refuses to import if this file carries either.
+# Relative paths resolve against the repo root.
+version: 1
+instance: lawkitty
+allow_optional_sources: false
+sources:
+  legislation:        {path: data}            # one dir per act: data/<act>/tree.json
+  case:               {path: public-corpus/cases}
+  ruling:             {path: data/rulings}
+  ato-private-ruling: {path: public-corpus/private_rulings/data/json}
+  nz-ruling:          {path: data/nz_rulings}
+  treaty:             {path: data/treaties}
+  regulatory-guide:   {path: data/regulatory-guides}
+  afsa-guide:         {path: data/afsa}
+artifacts:
+  dir: artifacts/current

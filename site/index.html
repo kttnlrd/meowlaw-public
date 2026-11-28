@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>lawkitty: the law, pounced on</title>
+<meta name="description" content="lawkitty is two things: a fast web app for legislation, case law and rulings, and a connector that plugs the same structured legal data into your AI. Related-content graphing and definition mapping built in.">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+<meta name="theme-color" content="#120d17">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="lawkitty">
+<meta property="og:title" content="lawkitty: the law, pounced on">
+<meta property="og:description" content="lawkitty is two things: a fast web app for legislation, case law and rulings, and a connector that plugs the same structured legal data into your AI. Related-content graphing and definition mapping built in.">
+<meta property="og:image" content="https://lawkitty.app/assets/og-image.png">
+<meta property="og:url" content="https://lawkitty.app/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lawkitty.app/assets/og-image.png">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="css/site.css?v=4">
+</head>
+<body>
+<div class="announce">lawkitty is free to use during beta.</div>
+
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="lawkitty home"><img src="assets/lawkitty-lockup-cat.png" alt="lawkitty"></a>
+    <div class="nav-actions">
+      <a class="btn btn-sm" href="setup.html">Connect to AI</a>
+      <a class="btn btn-sm btn-primary" href="login.html">Get pouncing</a>
+    </div>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav class="menu-panel" aria-label="Mobile">
+        <a class="btn btn-sm" href="setup.html">Connect to AI</a>
+        <a class="btn btn-sm btn-primary" href="login.html">Get pouncing</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <h1 class="lk-hero hero-title">The law,<br>pounced on.</h1>
+    <p class="lk-lead muted">A beautiful UI for legal text.<br>Connect your AI of choice for high-accuracy legal citations.</p>
+    <div style="display: flex; gap: 12px;">
+      <a class="btn btn-primary" href="login.html">Get pouncing</a>
+    </div>
+  </div>
+  <div class="hero-stage">
+    <canvas id="lk-yarn" aria-hidden="true" width="1440" height="780"></canvas>
+  </div>
+</section>
+
+<section id="sources" class="wrap sources">
+  <div class="sources-head">
+    <h2 class="lk-h1 section-title">One. The web app.</h2>
+    <p class="muted">Legislation, case law, rulings and more in one place. Search across all of it, graph the related content, and tap any defined term for its full text.</p>
+  </div>
+  <div class="grid-4">
+    <div class="card"><span class="badge c-catnip">Tax</span><h3>Tax</h3><p>Income tax, GST, super and more, section by section, plus every defined term with its full text.</p></div>
+    <div class="card"><span class="badge c-tabby">Corporations</span><h3>Corporations law</h3><p>The Corporations Act and ASIC regulatory guides, with the sections each guide cites.</p></div>
+    <div class="card"><span class="badge c-tabby-outline">AML/CTF</span><h3>AML/CTF</h3><p>The AML/CTF Act, rules and AUSTRAC guidance in one place.</p></div>
+    <div class="card"><span class="badge c-yarn">Rulings</span><h3>Government rulings and legislative instruments</h3><p>ATO public and private rulings and other instruments, searchable next to the law they interpret.</p></div>
+    <div class="card"><span class="badge c-gavel">Map</span><h3>Interpretive maps</h3><p>Click a step to see the statute, cases and definitions behind it.</p></div>
+    <div class="card"><span class="badge c-plain">Case</span><h3>Case law</h3><p>Case summaries with the legislation they rely on and the cases they cite.</p></div>
+  </div>
+</section>
+
+<section id="mcp" class="wrap mcp">
+  <div class="mcp-box">
+    <div class="mcp-copy">
+      <span class="chip c-gavel">MCP connector</span>
+      <h2 class="lk-h1 section-title">Two. Your AI, with citations.</h2>
+      <p class="muted" style="font-size: 18px; line-height: 28px">Connect Claude Desktop or any MCP client to the same structured data. Your assistant answers from the actual sources, not guesses.</p>
+      <ol class="steps">
+        <li><b style="background: var(--catnip)">1</b><span>Generate a token in your account.</span></li>
+        <li><b style="background: var(--yarn)">2</b><span>Paste the connector URL into your client.</span></li>
+        <li><b style="background: var(--tabby)">3</b><span>Ask your question. Get citations back.</span></li>
+      </ol>
+    </div>
+    <div class="term">
+      <div class="term-bar"><i style="background: var(--hiss)"></i><i style="background: var(--tabby)"></i><i style="background: var(--catnip)"></i><span>claude_desktop_config.json</span></div>
+      <!-- ponytail: connector URL is the current host; swap when the real domain lands -->
+<pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"lawkitty"</span>: {
+      <span class="k">"url"</span>: <span class="s">"https://lawkitty.app/mcp"</span>
+    }
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section class="string">
+  <svg aria-hidden="true" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax meet">
+    <path d="M-20 250 C 140 330, 260 90, 420 170 C 520 220, 470 300, 410 270 C 350 240, 420 170, 520 200 C 700 260, 800 300, 1000 250 C 1150 212, 1260 300, 1330 262" fill="none" stroke="var(--tabby)" stroke-width="7" stroke-linecap="round"></path>
+    <path class="lk-twist" d="M-20 250 C 140 330, 260 90, 420 170 C 520 220, 470 300, 410 270 C 350 240, 420 170, 520 200 C 700 260, 800 300, 1000 250 C 1150 212, 1260 300, 1330 262" fill="none" stroke="var(--tabby-soft)" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 12"></path>
+    <defs><clipPath id="ball2"><circle cx="1360" cy="250" r="36"></circle></clipPath></defs>
+    <g class="lk-bob">
+      <circle cx="1360" cy="250" r="36" fill="var(--tabby)"></circle>
+      <g clip-path="url(#ball2)"><g class="lk-spin" fill="none" stroke="var(--tabby-soft)" stroke-width="4">
+        <ellipse cx="1360" cy="250" rx="40" ry="14" transform="rotate(-30 1360 250)"></ellipse>
+        <ellipse cx="1360" cy="250" rx="40" ry="26" transform="rotate(-30 1360 250)"></ellipse>
+        <ellipse cx="1360" cy="250" rx="40" ry="18" transform="rotate(60 1360 250)"></ellipse>
+      </g></g>
+    </g>
+  </svg>
+</section>
+
+<section class="wrap">
+  <div class="cta">
+    <div>
+      <h2 class="lk-h1 section-title">Ready to pounce?</h2>
+      <p>Free to use during beta. Start searching today.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-dark" href="login.html">Get pouncing</a>
+      <a class="btn btn-outline-dark" href="setup.html">Connect to AI</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <img src="assets/lawkitty-lockup-cat.png" alt="lawkitty">
+    <nav aria-label="Footer">
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:meow@lawkitty.app">meow@lawkitty.app</a>
+    </nav>
+    <small>© 2026 Cadena Legal Pty Ltd · ABN 78 657 024 774</small>
+  </div>
+</footer>
+
+<script src="js/lawkitty-loader.js?v=3" data-cat="assets/lawkitty-cat-head.png"></script>
+<script src="js/yarn.js?v=3"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
